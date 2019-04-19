@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<link href="<?php echo RES_PATH;?>/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<?php echo RES_PATH;?>/js/jquery-1.8.3.min.js"></script>
+
+</head>
+<body style="background: #fff3e1;">
+
+    <div class="lefttop">
+        <span></span>系统菜单</div>
+    <dl id="leftmenu" class="leftmenu">
+        
+
+    </dl>
+</body>
+
+<script type="text/javascript">
+    //var CurrentUserName = self.parent.topFrame.document.getElementById('login_name').firstChild.innerHTML.replace(/^\s+|\s+$/g, "");
+    var CurrentUserName = "<?php echo $admininfo[admin_name]?>",
+        currentNodeName = "";
+    $(function() {
+        $("dl dd").first().css("color", "#f00");
+        $(".menuson .header").on("click", function() {
+            console.log("menuson click");
+            var $parent = $(this).parent();
+            $(".menuson>li.active").not($parent).removeClass("active open").find('.sub-menus').hide();
+
+            $parent.addClass("active");
+            if (!!$(this).next('.sub-menus').size()) {
+                if ($parent.hasClass("open")) {
+                    $parent.removeClass("open").find('.sub-menus').hide();
+                } else {
+                    $parent.addClass("open").find('.sub-menus').show();
+                }
+            }
+
+            var $pp = $($parent).parent();
+            var myhtml = $($parent).html();
+            console.log(myhtml);
+            $($parent).remove();
+            $pp.prepend('<dd>' + myhtml + '</dd>');
+
+        });
+
+        $('.leftmenu').on("click", ".sub-menus li", function(e) {
+            //console.log("li click");
+
+            $(".sub-menus li.active").removeClass("active")
+            $(this).addClass("active");
+        });
+
+        $('.leftmenu').on("click", ".title", function() {
+
+            $('.menuson').slideUp().prev().css("color", "#000"); //所有都隐藏            
+
+            var $parent = $(this).parent();
+            var $pp = $($parent).parent();
+            var myhtml = $($parent).html();
+            $($parent).remove();
+            var dd = $("<dd>").html(myhtml);
+            dd.find('.menuson').hide();
+
+            $pp.prepend(dd);
+            currentNodeName = dd.children()[0].attributes[1].nodeValue;
+            if (CurrentUserName === "test") {//使用体验账号时，限制只能操作会员管理。
+
+                if (currentNodeName === "member") {
+                    dd.find('.menuson').slideDown();
+                    self.parent.rightFrame.location = "admin.php?c=" + currentNodeName; //自动定位到对应左菜单下子菜单第一项并显示对应内容
+                } else {
+                    self.parent.rightFrame.location = "admin.php?c=index&a=right";
+                }
+                /*
+                if (dd.children('#member').size() > 0) {
+                //console.log(CurrentUserName);
+                dd.find('.menuson').slideDown();
+                } else {
+                //alert(CurrentUserName + "为体验用户^_^" + "\n" + "了解更多，请加盟我们^_^" + "\n" + "加盟热线：18138411366");
+                //alert(CurrentUserName + "为体验用户^_^" + "\n" + "了解更多，请加盟我们^_^");
+                self.parent.rightFrame.location = "admin.php?c=index&a=right";
+                }
+                */
+            } else {//使用非体验账号时，开放所有操作管理。
+                dd.find('.menuson').slideDown(); //展开
+                self.parent.rightFrame.location = "admin.php?c=" + currentNodeName;
+            }
+            //dd.find('.menuson').slideDown(); //展开
+
+            //scrollTo(0,0);//回到顶部
+            $(window).scrollTop(0);
+            dd.find('.menuson').prev().css("color", "#f00");
+
+        });
+
+
+
+
+    })
+
+    function leftmenu_click(label) {
+        label = label == 'none' ? 'sos' : label;
+        $("#" + label).click();
+    }
+
+		
+</script>
+
+
+<script language="javascript">
+    var brandTag = window.location.search.substring(1).replace(/\s+/g, ""),
+        brandJsonUrl = '<?php echo RES_PATH;?>/json/brand.js',
+        brandObj = getBrandObj(brandJsonUrl),
+        jsonObjImgDir = "<?php echo RES_PATH;?>/images/";
+
+    window.onload = function() {
+        judgeMenu(brandObj[2]["leftMenu"]);
+    };
+
+    function judgeMenu(obj) {
+        for (var i = 0, iLength = obj.length; i < iLength; i++) {
+            if (obj[i].show.length != 0) {
+                addContent(i, "leftmenu", obj);
+            }
+        }
+    }
+
+    function getBrandObj(url) {
+        return JSON.parse($.ajax({ url: url, async: false }).responseText);
+    }
+
+    function addContent(i, id, jsonObj) {
+        document.getElementById(id).insertAdjacentHTML(
+		'beforeend',
+		'<dd id="left_menu_"' + jsonObj[i].id + '">' + '\n' +
+			'<div class="title" id="' + jsonObj[i].id + '">' + '\n' +
+		    '<span><img src="' + jsonObjImgDir + jsonObj[i].img + '" /></span>' + jsonObj[i].name + '\n' +
+			'</div>' + '\n' +
+		  '<ul class="menuson sub-menus">' + '\n' +
+		    addLiContent(i, jsonObj) + '\n' +
+		  '</ul>' + '\n' +
+		'</dd>' + '\n'
+	    );
+    }
+
+    function addLiContent(i, jsonObj) {
+        var subType, liStr = '';
+        for (var j = 0, jLength = jsonObj[i].subMenu.length; j < jLength; j++) {
+            subType = jsonObj[i].subMenu[j].type;
+            subType = subType != '' ? subType : 'c=' + jsonObj[i].id;
+            liStr += '<li>' + '\n' +
+			         '<cite></cite><a href="admin.php?' + subType + '&' + jsonObj[i].subMenu[j].href + '" target="rightFrame">' + jsonObj[i].subMenu[j].name + '</a><i></i>' + '\n' +
+			       '</li>' + '\n';
+        }
+        return liStr;
+    }
+
+</script>
+</html>

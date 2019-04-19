@@ -1,0 +1,106 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+    <script type="text/javascript">
+	$(document).ready(function(e) {
+        $("select").uedSelect({width: 230});
+        
+        
+        
+      });</script>
+ 
+    <form name="form1" method="post">
+      <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+          <li><a href="admin.php?c=index&a=right">首页</a></li>
+          <li><a href="#">营养餐厅</a></li>
+		  <li><a href="admin.php?c=cookmenu">菜单管理</a></li>
+
+          <li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+		  </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>菜单管理</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>菜名称:</label>
+                  <input name="name" value="<?php echo $info['name'];?>" type="text" id="name" class="dfinput" /></li>
+              </td>
+			  </tr>
+			  <tr>
+
+			  <td>
+                <li>
+                  <label>单价:</label>
+                  <input name="price" value="<?php echo round($info['price'],2);?>" type="text" id="price" class="dfinput" /></li>
+              </td>
+
+			  
+               
+            </tr>
+          </table>
+        </ul>
+      </div>
+      <div class="formbody">
+        <ul class="forminfo">
+          <table width="0" border="0" align="center">
+            <tr>
+              <td>
+                <li>
+                  <label>&nbsp;</label>
+                  <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+	  <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+
+ var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写菜名称!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=cookmenu&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=cookmenu&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+ 
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

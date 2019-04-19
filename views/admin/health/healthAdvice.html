@@ -1,0 +1,166 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $(".click").click(function(){
+  $(".tip").fadeIn(200);
+  });
+  
+  $(".tiptop a").click(function(){
+  $(".tip").fadeOut(200);
+});
+
+  $(".sure").click(function(){
+  $(".tip").fadeOut(100);
+});
+
+  $(".cancel").click(function(){
+  $(".tip").fadeOut(100);
+});
+     $("select").uedSelect({width: 100});
+});
+ 
+    </script>
+ 
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="admin.php?c=index&a=right">首页</a></li>
+            <li><a href="#">健康咨询</a></li>
+            <li><a href="admin.php?c=healthAdvice">咨询记录</a></li>
+        </ul>
+    </div>
+    <div class="rightinfo">
+        <div class="tools">
+            <ul class="toolbar">
+                <li style="padding-right:10px;"><a href="admin.php?c=healthAdvice&a=add"><span>
+                    <img src="<?php echo RES_PATH;?>/images/t01.png" /></span>添加</a></li>
+                
+                <li>
+                    <div class="vocation" style="height:35px;">
+                        <select name="select_search" id="select_search">
+	<option  value="">搜索条件</option>
+	<option value="name" <?php if($SO['select'] =='name'){echo 'selected';}?>>姓名</option>
+	<option value="health" <?php if($SO['select'] =='health'){echo 'selected';}?>>心理咨询师</option>
+</select>
+                    </div>
+                </li>
+                <li>
+                    <input name="Tkey" type="text" id="word" value="<?php echo $SO['word'];?>" style="width:200px; height:30px;" />
+                </li>
+                <li>
+                    <input type="submit" name="btn_search" value="搜索" id="btn_search" class="btn" />
+                </li>
+            </ul>
+        </div>
+        <table class="tablelist">
+            <thead>
+                <tr>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        姓名
+                    </th>
+                    <th>
+                        手机号
+                    </th>
+                    <th>
+                        咨询类别
+                    </th>
+                    <th>
+                        咨询事由
+                    </th>
+                    <th>
+                        咨询时间
+                    </th>
+                    <th>
+                        咨询师
+                    </th>
+                    <th>
+                        咨询结果
+                    </th>
+                    <th>
+                        咨询次数
+                    </th>
+                    <th>
+                        是否满意
+                    </th>
+                    <th>
+                        操作
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="td_showContent">
+	<?php 
+				foreach($items as $item){
+	?>
+       <tr>
+	<td><?php echo $item['advice_id'];?></td>
+	<td><?php echo $item['name'];?></td>
+    <td><?php echo $item['mobile'];?></td>
+    <td><?php echo $item['ask_type'];?></td>
+    <td><?php echo $item['ask_cause'];?></td>
+	<td><?php echo $item['ask_time'];?></td>
+    <td><?php echo $healths[$item['worker_id']];?></td>
+    <td><?php echo $item['ask_result'];?></td>
+	<td><?php echo $item['ask_num'];?></td>
+    <td style=" color:<?php echo $item['satisfy'] == 'A' ? 'Green' : 'Red';?>;"><?php echo empty($item['satisfy'])?'':($item['satisfy'] == 'A' ? '满意' : '不满意');?></td>
+	<td>
+        <a href="admin.php?c=healthAdvice&a=edit&id=<?php echo $item['advice_id'];?>" class="tablelink">修改</a>
+		<a href="javascript:void(0);" class="tablelink" onclick="javascript: deleteOne(<?php echo $item['advice_id'];?>);">删除</a>
+	</td>
+      </tr>
+	 <?php 
+		}
+	?>
+            </tbody>
+        </table>
+        <div class="pagin">
+             <?php include(VIEWS.'/common/page.html'); ?>
+        </div>
+         
+    </div>
+
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+    </script>
+
+
+<script>
+$("#btn_search").click(function(){
+	var select = $("#select_search").val();
+	var word = $("#word").val();
+	var url = "admin.php?c=healthAdvice&a=index";
+	url += "&select=" + select + "&word=" + word;
+	location.href = url;
+
+});
+
+function deleteOne(id){
+	if(!confirm('确定要删除吗?')){
+		return false;
+	}
+	var url = location.href;
+	var formData = {};
+		formData["id"] = id;
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=healthAdvice&a=delone',
+			data: formData,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('删除成功!');
+					location.href = url;
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+}
+</script>
+ <?php include(VIEWS.'/common/footer.html'); ?>

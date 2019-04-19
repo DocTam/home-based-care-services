@@ -1,0 +1,276 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+    <script type="text/javascript">
+	$(document).ready(function(e) {
+        $("select").uedSelect({width: 230});
+      });</script>
+ 
+    <form name="form1" method="post" >
+       
+      <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+          <li>
+          <a href="admin.php?c=index&a=right">首页</a></li>
+		  <li><a href="javascript:;">家政服务</a></li>
+        <li><a href="admin.php?c=order">服务订单管理</a></li>
+		 <li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+        </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>订单管理</span></div>
+        <ul class="forminfo">
+          <table>
+		  <tr>
+              <td>
+                <li>
+                  <label>工单编号:</label>
+				  <?php if($id>0){?>
+                  <input name="order_no" type="text" id="order_no" class="dfinput" disabled value="<?php echo $info['order_no'];?>" />
+				  <?php }else{?>
+				  <input disabled value="<?php echo $code;?>" type="text" id="order_no" class="dfinput" />
+				  <?php }?>
+				  </li>
+              </td>
+
+			  <td>
+                <li>
+                  <label>订单状态:</label>
+                  <div class="vocation">
+                    <select id="status" name="status">
+                      <option value="0" >请选择</option>
+                      <option value="1" <?php if($info['status'] == 1){echo 'selected';}?>>派单中</option>
+                      <option value="2" <?php if($info['status'] == 2){echo 'selected';}?>>服务中</option>
+                      <option value="3" <?php if($info['status'] == 3){echo 'selected';}?>>已完成</option>
+                      <option value="-1" <?php if($info['status'] == -1){echo 'selected';}?>>已取消</option></select>
+                  </div>
+                </li>
+              </td>
+
+			  <td>
+                <li>
+                  <label>订单金额:</label>
+                  <input name="price" value="<?php echo $info['price'];?>" type="text" id="price" class="dfinput" /></li>
+              </td>
+
+			  </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>服务内容:</label>
+				  <div class="vocation">
+                  <select name="item_id" id="item_id" onchange="changeItem(this)">
+                       <option value="">请选择</option>
+					  <?php 
+						foreach($serviceItems as $item){
+					  ?>
+                      <option value="<?php echo $item['item_id'];?>" <?php if($info['item_id'] == $item['item_id']){echo 'selected';}?>  ><?php echo $item['name'];?></option>
+					  <?php 
+						}
+					  ?>
+                    </select>
+					</div>
+				 </li>
+              </td>
+			  <td>
+                <li>
+                  <label>项目类别:</label>
+                  <input disabled value="<?php echo $services['type_name'];?>" type="text" id="type_id" class="dfinput" />
+                </li>
+              </td>
+
+              <td>
+                <li>
+                  <label>服务商名称:</label>
+                  <input disabled value="<?php echo $services['service_name'];?>" type="text" id="service_id" class="dfinput" />
+				</li>
+              </td>
+              
+            </tr>
+            <tr>
+              
+              <td>
+                <li>
+					<label>服务人员:</label>
+                  <div class="vocation">
+                    <select name="worker_id" id="worker_id">
+                      <option value="">请选择</option>
+					  <?php 
+						foreach($houses as $key => $item){
+					  ?>
+                      <option value="<?php echo $key; ?>" <?php if($info['worker_id'] == $key){echo 'selected';}?>><?php echo $item;?></option>
+					  <?php 
+						}
+					  ?>
+                    </select>
+			   </li>
+              </td>
+               
+
+			  <td>
+                <li>
+                  <label>备注:</label>
+                  <input name="memo" value="<?php echo $info['memo'];?>" type="text" id="memo" class="dfinput" /></li>
+              </td>
+            </tr>
+
+			<tr>
+              <td>
+                <li>
+                  <label>合同开始日:</label>
+                  <input name="agreement_begin" type="text" id="agreement_begin" onClick="WdatePicker({ dateFmt: 'yyyy-MM-dd', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['agreement_begin']>0? date('Y-m-d',$info['agreement_begin']) : '';?>" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>合同结束日:</label>
+                  <input name="agreement_end" type="text" id="agreement_end" onClick="WdatePicker({ dateFmt: 'yyyy-MM-dd', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['agreement_end']>0? date('Y-m-d',$info['agreement_end']) : '';?>" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>登记时间:</label>
+                  <input  type="text" disabled value="<?php echo $info['dateline']>0? date('Y-m-d',$info['dateline']) : (date('Y-m-d',__TIME));?>" class="dfinput" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>客户信息</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>客户姓名:</label>
+                  <input name="customer_name" value="<?php echo $info['customer_name'];?>" type="text" id="customer_name" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>联系方式:</label>
+                  <input name="customer_mobile" value="<?php echo $info['customer_mobile'];?>" type="text" id="customer_mobile" class="dfinput" /></li>
+              </td>
+
+			  <td>
+                <li>
+                  <label>支付方式:</label>
+                  <input name="pay_type" value="<?php echo $info['pay_type'];?>" type="text" id="pay_type" class="dfinput" /></li>
+              </td>
+              
+            </tr>
+			 
+            
+            <tr>
+              
+              
+              <td>
+			  <li>
+                  <label>评价:</label>
+                  <input name="comment" value="<?php echo $info['comment'];?>" type="text" id="comment" class="dfinput" /></li>
+			  </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+      <div class="formbody">
+        <ul class="forminfo">
+          <table width="0" border="0" align="center">
+            <tr>
+              <td>
+                <li>
+                  <label>&nbsp;</label>
+                  <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+	  <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+
+function changeItem(obj){
+	var item_id = $(obj).val();
+	if(item_id == ""){
+		$("#type_id").val("");
+		$("#service_id").val("");
+		alert("请选择服务内容");
+		return;
+	}
+	var data = {id: item_id };
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=serviceItem&a=getservice',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					$("#type_id").val(res.data.type_name);
+					$("#service_id").val(res.data.service_name);
+
+				} else {
+					
+					$("#type_id").val("");
+					$("#service_id").val("");
+					alert("服务内容数据错误!");
+				}
+			}
+
+		});
+}
+var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(! data['id'] && data['order_no'] == ''){
+		alert("请填写工单编号!");
+		return;
+	}
+
+	if(!data['item_id'] || data['item_id'] == ''){
+		alert("请选择服务内容!");
+		return;
+	}
+
+	if(!data['customer_name'] || data['customer_name'] == ''){
+		alert("请填写客户姓名!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=order&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=order&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+ 
+
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

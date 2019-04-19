@@ -1,0 +1,261 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+
+<style type="text/css">
+a:hover{position:relative;top:50px;border:11px solid #CC9900;}
+.abc a:hover{position:static;border:none}
+</style>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=bTo1dN47NP1gEvFgReoaYWWh9wxrXGOX"></script>
+
+
+<form name="form1" method="post" >
+  <div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+      <li>
+        <a href="admin.php?c=index&a=right">首页</a></li>
+      <li>
+        <a href="admin.php?c=sos&a=map">报警地图信息</a></li>
+    </ul>
+  </div>
+  <div class="abc">
+    <table id="yyy" Width="100%">
+      <tr>
+        <td Width="75%">
+          <div style="width:100%;height:760px;border:#ccc solid 1px;font-size:12px" id="map"></div>
+        </td>
+        <td valign="top" Width="25%">
+          <div class="abc">
+            <div>
+              <table cellspacing="2" cellpadding="4" align="Center" rules="cols" class="DridView1" border="1" id="GridView1" style="color:#333333;border-width:1px;border-style:solid;height:100%;width:100%;">
+                <thead>
+				<tr style="color:White;background-color:#E8AD4A;font-weight:bold;height:40px;">
+                  <th scope="col">姓名</th>
+                  <th scope="col">手机号</th>
+                  <th scope="col">
+                    <a href="javascript:;" style="color:White;">报警时间</a>
+				  </th>
+                  <th scope="col">是否处理</th>
+                  <th scope="col">查看</th>
+				  </tr>
+				  </thead>
+				  <tbody id="td_showContent">
+
+				  <?php 
+					$member_sos = array();
+					if(count($items)>0){
+						$first_sos = array(
+							'content' => "{$items[0]['name']},{$items[0]['mobile']},{$items[0]['address']}",
+							'point' => array('lon'=>$items[0]['lon'],'lat'=>$items[0]['lat']),
+						);
+					} else {
+						$first_sos = array();
+					}
+					 
+					foreach($items as $item){
+						$member_sos[$item['data_id']] = array(
+							'content' => "{$item['name']},{$item['mobile']},{$item['address']}",
+							'point' => array('lon'=>$item['lon'],'lat'=>$item['lat']),
+						);
+				  ?>
+                <tr align="center" style="color:#333333;background-color:#FFFBD6;height:40px;">
+                  <td>
+                    <?php echo $item['name'];?>
+				  </td>
+                  <td>
+                    <?php echo $item['mobile'];?>
+                  </td>
+                  <td> <?php echo $item['time_begin'] ? $item['time_begin'] : date('Y-m-d H:i:s', $item['dateline']);?> </td>
+                  <td>
+                    <a href="admin.php?c=sos&a=sosinfo&id=<?php echo $item['data_id'];?>"><span><?php echo $item['status'] == 1 ? '是' : '否';?></span></a>
+				  </td>
+                  <td>
+                    <input type="button" value="查看" onclick="showmap(<?php echo $item['data_id']; ?>);" /></td>
+                </tr>
+
+				<?php 
+					}
+				?>
+
+                <tr align="center" style="color:#333333;background-color:#FFCC66;">
+                  <td colspan="5">
+                    <table border="0">
+                      <tr>
+						<td><a href="admin.php?<?php echo $pager['query_url'];?>&page=1" style="color:#333333; margin:5px;">首页</a></td>
+						<td><a href="admin.php?<?php echo $pager['query_url'];?>&page=<?php echo $pager['prepage'];?>" style="color:#333333; margin:5px;">上一页</a></td>
+                        <td><span><?php echo $pager['page'];?></span></td>
+						<td><a href="admin.php?<?php echo $pager['query_url'];?>&page=<?php echo $pager['nextpage'];?>" style="color:#333333; margin:5px;">下一页</a></td>
+                        <td><a href="admin.php?<?php echo $pager['query_url'];?>&page=<?php echo $pager['nextpage'];?>" style="color:#333333; margin:5px;">尾页</a></td>
+						<td><a href="javascript:;" style="color:#333333; margin:5px;">共<?php echo $pager['pagenum'];?>页</a></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+				</tbody>
+              </table>
+            </div>
+          </div>
+           
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- 声音 -->
+	<div id="voice" style="display:none;">
+		<audio id="MPlayer_audio" src="" loop="false" width="0px" height="0px" ></audio>
+		<embed id="MPlayer_embed" src="" autostart="false" hidden="true" loop="false"></embed>
+	</div>
+
+</form>
+
+<script type="text/javascript">
+	var first_sos = <?php echo json_encode($first_sos, JSON_UNESCAPED_UNICODE); ?>;
+	var member_sos = <?php echo json_encode($member_sos, JSON_UNESCAPED_UNICODE); ?>;
+	
+	var longitude = 114.025943;//默认深圳
+	var latitude = 22.54604;
+	var isshowlabel = false;//是否显示标签
+	var showcontent = ''; //显示内容
+
+	if(first_sos.point){
+		longitude = first_sos.point.lon;
+		latitude = first_sos.point.lat;
+		showcontent = first_sos.content;
+
+		isshowlabel = true;
+	}
+	
+	function showmap(id){//在地图中显示
+		
+		var info = member_sos[id];
+		if(!info){
+			alert('数据异常');
+			return;
+		}
+		longitude = info.point.lon;
+		latitude = info.point.lat;
+		showcontent = info.content;
+		isshowlabel = true;
+
+		changecoords(longitude, latitude, function(x,y){
+			map.clearOverlays();
+
+			longitude = x;
+			latitude = y;
+		
+			//map.setCenter( new BMap.Point(longitude, latitude) );
+			map.centerAndZoom(new BMap.Point(longitude, latitude),14);
+			addMapOverlay();//重新添加覆盖物
+		});
+	}
+
+    //创建和初始化地图函数：
+    function initMap(){
+      createMap();//创建地图
+      setMapEvent();//设置地图事件
+      addMapControl();//向地图添加控件
+      addMapOverlay();//向地图添加覆盖物
+    }
+    function createMap(){ 
+      map = new BMap.Map("map"); 
+      map.centerAndZoom(new BMap.Point(longitude, latitude),14);
+    }
+    function setMapEvent(){
+      map.enableScrollWheelZoom();
+      map.enableKeyboard();
+      map.enableDragging();
+      map.enableDoubleClickZoom()
+    }
+    function addClickHandler(target,window){
+      target.addEventListener("click",function(){
+        target.openInfoWindow(window);
+      });
+    }
+    function addMapOverlay() {
+        
+      var markers = [
+        {content: showcontent,title:"报警位置",imageOffset: {width:-46,height:-21},position:{lat:latitude, lng:longitude}}
+      ];
+      for(var index = 0; index < markers.length; index++ ){
+        var point = new BMap.Point(markers[index].position.lng,markers[index].position.lat);
+        var marker = new BMap.Marker(point,
+			{icon:new BMap.Icon("http://api.map.baidu.com/lbsapi/createmap/images/icon.png",
+						new BMap.Size(20,25),{ imageOffset: new BMap.Size(markers[index].imageOffset.width,
+							markers[index].imageOffset.height)
+			})});
+        var label = new BMap.Label(markers[index].title,{offset: new BMap.Size(25,5)});
+        var opts = {
+          width: 200,
+          title: markers[index].title,
+          enableMessage: false
+        };
+
+		if(isshowlabel){ //显示标签
+			var infoWindow = new BMap.InfoWindow(markers[index].content,opts);
+			marker.setLabel(label);
+			addClickHandler(marker,infoWindow);
+		}
+        
+        map.addOverlay(marker);
+      };
+      //var labels = [
+       // {position:{lng:longitude, lat:latitude},content:""}
+      //];
+      //for(var index = 0; index < labels.length; index++){
+        //var opt = { position: new BMap.Point(labels[index].position.lng,labels[index].position.lat )};
+        //var label = new BMap.Label(labels[index].content,opt);
+        //map.addOverlay(label);
+      //};
+    }
+    //向地图添加控件
+    function addMapControl(){
+      var navControl = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+      map.addControl(navControl);
+    }
+
+function changecoords(lon,lat, callback){
+	var data = {coords: lon + "," + lat};
+	jQuery.ajax({
+			type: 'post',
+			url: 'index.php?a=gpstobaidu',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				if(typeof res == 'string'){
+					res = JSON.parse(res);
+				}
+				 
+				console.log(typeof res);
+				
+				if(res.status == 0){
+					console.log('callback');
+					callback(res.result[0].x, res.result[0].y );
+				}
+			}
+	});
+}
+
+var translateCallback = function(x, y){
+	longitude = x;
+	latitude = y;
+	initMap();
+}
+
+var map;
+changecoords(longitude, latitude, translateCallback);
+
+      
+  </script>
+
+<script type="text/javascript" src="<?php echo RES_PATH;?>/js/sos.js"></script>
+<script>
+
+var ismappage = true;
+var sosmp3file = '<?php echo IMG_PATH;?>/sos.mp3';
+var max_record_id = <?php echo $max_record_id; ?>;
+
+setInterval("checkSos()",5000);
+</script>
+
+<?php include(VIEWS.'/common/footer.html'); ?>

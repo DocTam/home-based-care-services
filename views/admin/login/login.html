@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link href="<?php echo RES_PATH;?>/css/style.css" rel="stylesheet" type="text/css" />
+    <script src="<?php echo RES_PATH;?>/js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <style>
+      .systemlogo
+      {
+        background: none;
+        margin: 0;
+      }
+      .systemlogo span
+      {
+        font-size: 4rem;
+        color: #fff;
+        display: inline-block;
+      }
+      .loginbm span
+      {
+        font-size: 2rem;
+        color: #fff;
+      }
+      .loginbody {
+        top: 10%;
+      }
+      .loginbox {
+        top: 40%;
+      }
+      .loginbox ul 
+      {
+        margin: 15% 40% 0 40%;
+      }
+      .loginuser
+      {
+        margin-top: 55%;
+      }
+
+#cloud1 
+{
+    top: 10%;
+    animation:cloud 40s linear infinite;
+}
+
+#cloud2
+{
+    top: 50%;
+    animation:cloud 60s linear infinite;
+}
+@keyframes cloud
+{
+ from{
+   background-position: -25% 0; 
+ }
+ to{
+  background-position: 125% 0;
+ }
+}
+
+    </style>
+  </head>
+  
+  <body style="background-color: #F0580C; background-image: url(<?php echo RES_PATH;?>/images/light.png);
+  background-repeat: no-repeat; background-position: center top; overflow: hidden;">
+      <div id="mainBody">
+        <div id="cloud1" class="cloud"></div>
+        <div id="cloud2" class="cloud"></div>
+      </div>
+      <div class="logintop"><span></span></div>
+      <div class="loginbody">
+        <div class="systemlogo"><span class="loginbrand"></span>
+          <input type="submit" name="Button1" value="" id="Button1" class="loginbtn" style="display: none;" />
+        </div>
+        <div class="loginbox" style="margin:0 auto;">
+          <ul>
+            <li>
+              <input name="loginName" type="text" id="loginName" class="loginuser"  /></li>
+            <li>
+              <input name="loginPwd" type="password" id="loginPwd" class="loginpwd" onclick="JavaScript:this.value=''" /></li>
+            <li>
+              <table>
+                <tr>
+                  <td style="width: 150px; text-align: center;">
+                    <a class="loginbtn" href="javascript: submit_form();" title="点击登录" style="display: block;
+                    text-align: center; color: White;">登录</a>
+                  </td>
+                  <td style="width: 150px; text-align: center;">
+                    <input name="" type="button" class="loginbtn" value="重置" onclick="javascript: reset_form();" /></td>
+                </tr>
+              </table>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="loginbm"><span></span></div>
+
+<script language="javascript">
+    var brandTag = window.location.search.substring(1).replace(/\s+/g, ""),
+      brandJsonUrl = '<?php echo RES_PATH;?>/json/brand.js',
+      brandObj = getBrandObj(brandJsonUrl),
+      formData = {};
+
+    window.onload = function() {
+        //loginBoxPosition();
+        //$(window).resize(loginBoxPosition());
+        judgeBrand();
+        judgeEnterStatus();
+    };
+
+    function loginBoxPosition() {
+        $('.loginbox').css({
+            'position': 'absolute',
+            'left': ($(window).width() - 692) / 2
+        });
+    }
+
+    function judgeBrand() {
+        if (brandTag.length != 0 && brandObj[0][brandTag]) {
+        } else {
+            brandTag = 'wlsd';
+        }
+
+        var title = brandObj[0][brandTag].name +
+                brandObj[0][brandTag].type + " " +
+                brandObj[0][brandTag].description,
+        group = brandObj[0][brandTag].name +
+                brandObj[0][brandTag].type +
+                brandObj[0][brandTag].group,
+        copyRight = brandObj[0][brandTag].copyRight + " " +
+                    brandObj[0][brandTag].name +
+                    brandObj[0][brandTag].type;
+        document.title = "欢迎登录 " + title;
+        $('.loginbrand').html(title.replace(/\s+/g, "<br>"));
+        $('.logintop span:first').html(group);
+        $('.loginbm span:first').html(copyRight);
+    }
+
+    function getBrandObj(url) {
+        return JSON.parse($.ajax({ url: url, async: false }).responseText);
+    }
+
+    function judgeEnterStatus() {
+        $(document).keypress(
+      function(e) {
+          if (e.which == 13) {
+              submit_form();
+          }
+      }
+    );
+    }
+
+    function getInputValSubmit() {
+        getInputVal("#loginName", "name");
+        getInputVal("#loginPwd", "pwd");
+    }
+
+    function getInputVal(id, field) {
+        var tmp = $(id).val();
+        if (tmp.length != 0) {
+            formData[field] = tmp;
+        } else {
+            formData["count"] += 1;
+            if (formData["count"] > 1) {
+                alert('请输入正确的登录账号或密码');
+                //$(id).focus();
+            }
+        }
+    }
+    function submit_form() {
+        getInputValSubmit();
+        $.ajax({
+            type: 'post',
+            url: 'admin.php?c=index&a=login',
+            data: formData,
+            dataType: 'json',
+            cache: false,
+            success: function(res) {
+                if (res.Success) {
+                    location.href = "admin.php?" + brandTag;
+                } else {
+                    alert(res.Msg);
+                }
+            }
+        });
+    }
+
+    function reset_form() {
+        $("#loginName, #loginPwd").val("");
+    } 
+
+</script>
+
+    <!--
+    <script src="<?php echo RES_PATH;?>/js/cloud.js" type="text/javascript"></script>
+    -->
+  </body>
+</html>

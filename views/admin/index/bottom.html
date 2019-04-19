@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<link href="<?php echo RES_PATH;?>/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<?php echo RES_PATH;?>/js/jquery-1.8.3.min.js"></script>
+<body>
+     
+ 
+    <div class="footer">
+    <span id="slogan"></span>
+    <div style=" margin-left:40%;">
+    <a href="javascript:;" onclick="showFrame()"><span id="sign_text" ><font color="#0000FF">隐藏顶部导航以及左边菜单</font></span></a>
+	</div>
+    <i id="copyRight"></i>    
+    </div>  
+<script language="javascript">
+	var hashide = 0,
+      str = "顶部导航以及左边菜单",
+      jsonObj = [
+        {
+          "sign_text" : "隐藏" + str,
+          "rows" : "130,*,31",
+          "cols" : "187,*",
+          "hashide" : "1"
+        },
+        {
+          "sign_text" : "显示" + str,
+          "rows" : "0,*,31",
+          "cols" : "0,*",
+          "hashide" : "0"
+        }
+      ];
+	function showFrame(){
+		var leftObj = window.parent.document.getElementById("bodyFrame"),
+        topObj = window.parent.document.getElementById("mainFrame");
+        hashide = jsonObj[hashide].hashide;
+        topObj.rows = jsonObj[hashide].rows;
+        leftObj.cols = jsonObj[hashide].cols;
+        document.getElementById("sign_text").innerHTML = jsonObj[hashide].sign_text;
+        self.parent.rightFrame.location.reload();
+    }
+
+    var brandTag = self.parent.window.location.search.substring(1).replace(/\s+/g, ""),
+            brandJsonUrl = '<?php echo RES_PATH;?>/json/brand.js',
+            brandObj = getBrandObj(brandJsonUrl);
+
+    window.onload = function() {
+        judgeBrand();
+    };
+
+
+    function judgeBrand() {
+        if (brandTag.length != 0 && brandObj[0][brandTag]) {
+        } else {
+            brandTag = 'wlsd';
+        }
+
+        var title = brandObj[0][brandTag].name +
+                        brandObj[0][brandTag].type + " " +
+                        brandObj[0][brandTag].description,
+                group = brandObj[0][brandTag].name +
+                        brandObj[0][brandTag].type +
+                        brandObj[0][brandTag].group,
+                copyRight = brandObj[0][brandTag].copyRight + " " +
+                            brandObj[0][brandTag].name +
+                            brandObj[0][brandTag].type,
+                slogan = brandObj[0][brandTag].mainSlogan + " " +
+                         brandObj[0][brandTag].slogan;
+        document.getElementById("slogan").innerHTML = slogan;
+        document.getElementById("copyRight").innerHTML = copyRight;
+    }
+
+    function getBrandObj(url) {
+        return JSON.parse($.ajax({ url: url, async: false }).responseText);
+    }
+
+</script>
+ </body>
+</html>

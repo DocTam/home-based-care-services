@@ -1,0 +1,166 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+<script type="text/javascript">
+$(document).ready(function(){
+  $(".click").click(function(){
+  $(".tip").fadeIn(200);
+  });
+  
+  $(".tiptop a").click(function(){
+  $(".tip").fadeOut(200);
+});
+
+  $(".sure").click(function(){
+  $(".tip").fadeOut(100);
+});
+
+  $(".cancel").click(function(){
+  $(".tip").fadeOut(100);
+});
+     $("select").uedSelect({width: 100});
+});
+ 
+    </script>
+
+ 
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li>
+          <a href="admin.php?c=index&a=right">首页</a></li>
+		  <li><a href="javascript:;">家政服务</a></li>
+        <li><a href="admin.php?c=order">服务订单管理</a></li>
+        </ul>
+    </div>
+    <div class="rightinfo">
+        <div class="tools">
+            <ul class="toolbar">
+                <li style="padding-right:10px;"><a href="admin.php?c=order&a=add"><span>
+                    <img src="<?php echo RES_PATH;?>/images/t01.png" /></span>添加</a></li>
+                
+                <li>
+                    <div class="vocation" style="height:35px;">
+<select name="select_search" id="select_search">
+	<option value="">搜索条件</option>
+	<option value="order_no" <?php if($SO['select'] =='order_no'){echo 'selected';}?>>编号</option>
+	<option value="name" <?php if($SO['select'] =='name'){echo 'selected';}?>>客户姓名</option>
+	<!--<option value="item" <?php if($SO['select'] =='item'){echo 'selected';}?>>服务项目</option>-->
+</select>
+                    </div>
+                </li>
+                <li>
+                    <input name="Tkey" type="text" id="word" value="<?php echo $SO['word'];?>" style="width:200px; height:30px;" />
+                </li>
+                <li>
+                    <input type="submit" name="btn_search" value="搜索" id="btn_search" class="btn" />
+                </li>
+            </ul>
+        </div>
+        <table class="tablelist">
+            <thead>
+                <tr>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        工单编号
+                    </th>
+                    <th>
+                        客户姓名
+                    </th>
+                    <th>
+                        联系方式
+                    </th>
+                    <th>
+                        服务内容
+                    </th>
+                    <th>
+                        服务人员
+                    </th>
+                    
+                    <th>
+                        客户评价
+                    </th>
+                    <th>
+                        登记时间
+                    </th>
+                    <th>
+                        费用
+                    </th>
+                    <th>
+                        操作
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="td_showContent">
+		<?php 
+				foreach($items as $item){
+		?>
+       <tr>
+	<td><?php echo $item['order_id'];?></td>
+    <td><?php echo $item['order_no'];?></td>
+	<td><?php echo $item['customer_name'];?></td>
+    <td><?php echo $item['customer_mobile'];?></td>
+	<td><?php echo $serviceItems[$item['item_id']];?></td>
+	<td><?php echo $houses[$item['worker_id']];?></td>
+    <td><?php echo $item['comment'];?></td>
+	<td><?php echo $item['dateline']>0 ? date('Y-m-d', $item['dateline']) : '';?></td>
+	<td><?php echo $item['price'];?></td>
+	<td>
+		<a href="admin.php?c=order&a=edit&id=<?php echo $item['order_id'];?>" class="tablelink">修改</a>
+			<a href="javascript:void(0);" class="tablelink" onclick="javascript: deleteOne(<?php echo $item['order_id'];?>);">删除</a>  
+	</td>
+      </tr>
+	 <?php 
+		}
+	?>
+            </tbody>
+        </table>
+        <div class="pagin">
+             <?php include(VIEWS.'/common/page.html'); ?>
+        </div>
+         
+    </div>
+
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script>
+
+<script>
+//搜索
+var searching = false;
+$("#btn_search").click(function(){
+	var select = $("#select_search").val();
+	var word = $("#word").val();
+	var url = "admin.php?c=order&a=index";
+	url += "&select=" + select + "&word=" + word;
+	location.href = url;
+
+});
+
+function deleteOne(id){
+	if(!confirm('确定要删除吗?')){
+		return false;
+	}
+	var url = location.href;
+	var formData = {};
+		formData["id"] = id;
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=order&a=delone',
+			data: formData,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('删除成功!');
+					location.href = url;
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+}
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

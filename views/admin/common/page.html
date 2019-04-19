@@ -1,0 +1,44 @@
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#select_page").uedSelect({
+          width: 60
+    });
+});
+
+function selectChange(){
+	location.href = $("#select_page").val();
+}
+</script>
+
+ <?php 
+	if($pager['pagenum']>1){//超过一页
+?>
+ <table id="tb_paing" cellpadding="0" cellspacing="0">
+  <tr>
+    <td align="center" style="width: 50px;">
+      <a href="admin.php?<?php echo $pager['query_url'];?>&page=1" id="a_index">首页</a></td>
+    <td align="center" style="width: 60px;">
+      <a href="admin.php?<?php echo $pager['query_url'];?>&page=<?php echo $pager['prepage'];?>" id="a_up">上一页</a></td>
+    <td align="center" style="width: 60px;">
+      <a href="admin.php?<?php echo $pager['query_url'];?>&page=<?php echo $pager['nextpage'];?>" id="a_next">下一页</a></td>
+    <td align="center" style="width: 50px;">
+      <a href="admin.php?<?php echo $pager['query_url'];?>&page=<?php echo $pager['pagenum'];?>" id="a_last">尾页</a></td>
+    <td align="right" style="width: 60px;">转到第</td>
+    <td align="center" style="width: 40px;">
+      <select name="select_page" id="select_page" style="height:30px;" onchange="javascript: selectChange('select_page');">
+        <?php 
+			for($page = 1;$page <= $pager['pagenum']; $page++){
+		?>
+        <option <?php if($page==$pager['page']){echo 'selected';}?> value="admin.php?<?php echo $pager['query_url'];?>&page=<?php echo $page;?>"><?php echo $page;?></option>
+		<?php 
+			}
+		?>
+		</select>
+    </td>
+    <td align="left" style="width: 40px;">页</td>
+    <td align="left" style="width: 110px;">
+      <span id="Label1">共 <?php echo $pager['count'];?> 条记录</span></td>
+  </tr>
+</table>
+<?php } ?>

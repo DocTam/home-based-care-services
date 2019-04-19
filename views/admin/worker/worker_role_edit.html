@@ -1,0 +1,117 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+    <script type="text/javascript">
+	$(document).ready(function(e) {
+         
+        $("select").uedSelect({
+          width: 232
+        });
+      });</script>
+ 
+    <form name="form1" method="post" >
+       
+      <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+          <li>
+            <a href="admin.php?c=index&a=right">首页</a></li>
+			<li><a href="admin.php?c=workerRole">员工服务角色管理</a></li>
+			<li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+        </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>员工服务角色管理</span></div>
+        <ul class="forminfo">
+		
+
+          
+		 <li>
+            <label>服务类型:</label>
+            <div class="vocation">
+                    <select id="type_id" name="type_id">
+                      <option value="">请选择</option>
+                      <?php foreach($types as $key => $item){ ?>
+                        <option <?php if($info[ 'type_id']==$key){echo 'selected';}?> value="<?php echo $key;?>">
+                            <?php echo $item;?></option>
+                        <?php } ?>
+					</select>
+             </div>
+			 <i><b>*</b></i>
+		 </li>
+
+		 <li>
+            <label>服务角色名称:</label>
+            <input name="name" type="text" value="<?php echo $info['name'];?>" id="name" class="dfinput" />
+			<i><b>*</b></i>
+			</li>
+
+		 
+
+          <?php if($id>0){ ?>
+		  <li>
+            <label>是否有效:</label>
+            <div class="vocation">
+              <select id="status" name="status">
+                      <option value="0">请选择</option>
+                      <option value="1" <?php if($info['status'] == 1){echo 'selected';}?> >有效</option>
+                      <option value="2" <?php if($info['status'] == 2){echo 'selected';}?> >无效</option></select>
+            </div>
+          </li>
+		  <?php  } ?>
+          <li style="margin-top:10px;">
+            <label>&nbsp;</label>
+            <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+        </ul>
+      </div>
+	  <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写服务角色名称!");
+		$("#name").focus();
+		return;
+	}
+	if(!data['type_id'] || data['type_id'] == ''){
+		alert("请选择服务类型!");
+		$("#type_id").focus();
+		return;
+	}
+	
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=workerRole&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=workerRole&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

@@ -1,0 +1,149 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+
+ 
+    <form name="form1" method="post" >
+       
+      <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+          <li><a href="admin.php?c=index&a=right">首页</a></li>
+        <li><a href="admin.php?g=system&c=Config">系统设置</a></li>
+		 
+        </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>系统设置</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label style="width:99px; margin-right: 5px;">服务商编号字符:</label>
+                  <input name="config[service_code]" onkeyup="this.value=this.value.toUpperCase()" type="text" id="service_code" class="dfinput"  value="<?php echo $code['service_code'];?>" />
+				  
+				</li>
+              </td>
+              <td>
+                <li>
+                  <label style="width:99px; margin-right: 5px;">起始序号:</label>
+                  <input name="config[service_sort]"   value="<?php echo $code['service_sort'];?>" type="text" id="service_sort" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label style="width:99px; margin-right: 5px;">数字位数:</label>
+                  <input name="config[service_num]"   value="<?php echo $code['service_num'];?>" type="text" id="service_num" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label style="width:99px; margin-right: 5px;">会员编号字符:</label>
+                  <input name="config[member_code]" onkeyup="this.value=this.value.toUpperCase()" type="text" id="member_code" class="dfinput"  value="<?php echo $code['member_code'];?>" />
+				  
+				</li>
+              </td>
+              <td>
+                <li>
+                  <label style="width:99px; margin-right: 5px;">起始序号:</label>
+                  <input name="config[member_sort]" value="<?php echo $code['member_sort'];?>" type="text" id="member_sort" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label style="width:99px; margin-right: 5px;">数字位数:</label>
+                  <input name="config[member_num]" value="<?php echo $code['member_num'];?>" type="text" id="member_num" class="dfinput" /></li>
+              </td>
+            </tr>
+			<tr>
+              <td>
+                <li>
+                  <label style="width:99px; margin-right: 5px;">服务人员编号字符:</label>
+                  <input name="config[worker_code]" onkeyup="this.value=this.value.toUpperCase()" type="text" id="worker_code" class="dfinput"  value="<?php echo $code['worker_code'];?>" />
+				  
+				</li>
+              </td>
+              <td>
+                <li>
+                  <label style="width:99px; margin-right: 5px;">起始序号:</label>
+                  <input name="config[worker_sort]" value="<?php echo $code['worker_sort'];?>" type="text" id="worker_sort" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label style="width:99px; margin-right: 5px;">数字位数:</label>
+                  <input name="config[worker_num]" value="<?php echo $code['worker_num'];?>" type="text" id="worker_num" class="dfinput" /></li>
+              </td>
+            </tr>
+			<tr>
+              <td>
+                <li>
+                  <label style="width:99px; margin-right: 5px;">订单编号字符:</label>
+                  <input name="config[order_code]" onkeyup="this.value=this.value.toUpperCase()" type="text" id="order_code" class="dfinput"  value="<?php echo $code['order_code'];?>" />
+				  
+				</li>
+              </td>
+              <td>
+                <li>
+                  <label style="width:99px; margin-right: 5px;">起始序号:</label>
+                  <input name="config[order_sort]" value="<?php echo $code['order_sort'];?>" type="text" id="order_sort" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label style="width:99px; margin-right: 5px;">数字位数:</label>
+                  <input name="config[order_num]" value="<?php echo $code['order_num'];?>" type="text" id="order_num" class="dfinput" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+      
+      <div class="formbody">
+        <ul class="forminfo">
+          <table width="0" border="0" align="center">
+            <tr>
+              <td>
+                <li>
+                  <label style="width:99px; margin-right: 5px;">&nbsp;</label>
+                  <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+	  <input type="hidden" name="K" id="K" value="code" /> 
+    </form>
+
+<script>
+
+var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+	
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?g=system&c=Config&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?g=system&c=Config';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

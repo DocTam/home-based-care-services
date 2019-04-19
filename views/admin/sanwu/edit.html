@@ -1,0 +1,223 @@
+ <?php include(VIEWS.'/common/header.html'); ?>
+
+<script type="text/javascript">
+    $(document).ready(function(e) {
+	    $("select").uedSelect({
+		    width : 232  
+	    });
+		$("#service").uedSelect({
+		    width : 100  
+	    });
+    });
+    </script>
+ 
+    <form name="form1" method="post" >
+ 
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+
+			<li><a href="admin.php?c=index&a=right">首页</a></li>
+            <li><a href="admin.php?c=sanwu">三无老人管理</a></li>
+
+			<li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+            <span>三无老人登记</span></div>
+        <ul class="forminfo">
+        <table>
+                <tr>
+                    <td>
+                        <li>
+                            <label>
+                    姓名:</label><input value="<?php echo $info['name'];?>" name="name" type="text" id="name" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                    手机号:</label><input value="<?php echo $info['mobile'];?>" name="mobile" type="text" id="mobile" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                    地址:</label><input value="<?php echo $info['address'];?>" name="address" type="text" id="address" class="dfinput" /></li>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <li>
+                            <label>
+                    民族:</label><input value="<?php echo $info['nation'];?>" name="nation" type="text" id="nation" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                                出生年月:</label>
+						<input name="birthday" onClick="WdatePicker({ dateFmt: 'yyyy/MM', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['birthY']>0 ? ($info['birthY'] . '/' . $info['birthM']) : ''; ?>" id="birthday" class="dfinput" />
+						</li>
+                    </td>
+
+					<td>
+                        <li>
+                            <label>
+                    性别:</label>
+					<div class="vocation">
+                    <select name="select_sex" id="select_sex">
+                      <option value="">请选择</option>
+                      <option value="1" <?php if($info['select_sex'] == 1){echo 'selected';}?>>男</option>
+                      <option value="2" <?php if($info['select_sex'] == 2){echo 'selected';}?>>女</option>
+					</select>
+                  </div>
+				  </li>
+                    </td>
+                </tr>
+                 
+                 
+         </table>
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+          <span>三无信息登记</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>身体状况:</label>
+                  <div class="vocation">
+                    <select id="health" name="health">
+					  <option value="">请选择</option>
+                      <option value="self_care" <?php if($info['health'] == 'self_care'){echo 'selected';}?>>自理</option>
+                      <option value="half_self_care" <?php if($info['health'] == 'half_self_care'){echo 'selected';}?>>半自理</option>
+                      <option value="no_self_care" <?php if($info['health'] == 'no_self_care'){echo 'selected';}?>>不能自理</option></select>
+                  </div>
+                </li>
+              </td>
+              <td>
+                <li>
+                  <label>城市低保金:</label>
+                  <input name="low_premium" value="<?php echo $info['low_premium'];?>" type="text" id="low_premium" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>基本生活费:</label>
+                  <input name="basic_money" value="<?php echo $info['basic_money'];?>" type="text" id="basic_money" class="dfinput" />
+				  </li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>政府救济:</label>
+                  <input name="relief" value="<?php echo $info['relief'];?>" type="text" id="relief" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>其它经济收入:</label>
+                  <input name="other" value="<?php echo $info['other'];?>" type="text" id="other" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>供养方式:</label>
+                  <div class="vocation">
+                    <select id="provide_way" name="provide_way">
+					  <option value="">请选择</option>
+                      <option value="sanju" <?php if($info['provide_way'] == 'sanju'){echo 'selected';}?>>散居</option>
+                      <option value="jigou" <?php if($info['provide_way'] == 'jigou'){echo 'selected';}?>>机构供养</option></select>
+                  </div>
+                </li>
+               </td>
+            </tr>
+            </table>
+            <table>
+             
+            <tr style="line-height:34px;padding-left:5px;font-weight:bold;width:800px;display:block;  ">
+              <td >
+                  <label>是否享受了政府购买养老服务制度:</label>
+                  
+              </td>
+			  <td style="width:100px;">
+				<div class="vocation" style="width:100px;">
+                    <select id="service" style="width:100px;" name="service">
+					  <option value="">请选择</option>
+                      <option value="yes" <?php if($info['service'] == 'yes'){echo 'selected';}?>>是</option>
+                      <option value="no" <?php if($info['service'] == 'no'){echo 'selected';}?>>否</option></select>
+                  </div>
+			  </td>
+            </tr>
+            <tr>
+              <td style="line-height:34px;padding-left:5px;font-weight:bold;width:800px;">
+                  <label>类别:</label>
+                  <label><input type="radio" value="sanwu" <?php if($info['flag'] == 'sanwu'){echo 'checked';}?> name="flag">三无老人</label>
+                  <label><input type="radio" value="canji" <?php if($info['flag'] == 'canji'){echo 'checked';}?> name="flag">三无残疾人</label>
+                  <label><input type="radio" value="jingshenbing" <?php if($info['flag'] == 'jingshenbing'){echo 'checked';}?> name="flag">三无精神病人</label>
+                  <label><input type="radio" value="nengli" <?php if($info['flag'] == 'nengli'){echo 'checked';}?> name="flag">赡养（扶养）人无赡养（扶养）能力的“三无”对象</label>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+
+	  <div class="formbody">
+        <ul class="forminfo">
+          <table width="0" border="0" align="center">
+            <tr>
+              <td>
+                <li>
+                  <label>&nbsp;</label>
+                  <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+
+   <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写姓名!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=sanwu&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=sanwu&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

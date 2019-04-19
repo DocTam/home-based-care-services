@@ -1,0 +1,18 @@
+
+<!-- 声音 -->
+	<div id="voice" style="display:none;">
+		<audio id="MPlayer_audio" src="" loop="false" width="0px" height="0px" ></audio>
+		<embed id="MPlayer_embed" src="" autostart="false" hidden="true" loop="false"></embed>
+	</div>
+	<div style="display:none;" id="sosmp3file" data="<?php echo IMG_PATH;?>/sos.mp3"></div>
+
+<script type="text/javascript" src="<?php echo RES_PATH;?>/js/sos.js"></script>
+<script>
+
+var max_record_id = '<?php echo $max_record_id; ?>';
+
+setInterval("checkSos()",5000);
+</script>
+
+</body>
+</html>

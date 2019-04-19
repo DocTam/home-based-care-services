@@ -1,0 +1,265 @@
+ <?php include(VIEWS.'/common/header.html'); ?>
+
+<script type="text/javascript">
+    $(document).ready(function(e) {
+	    $("select").uedSelect({
+		    width : 232  
+	    });
+		$("#service").uedSelect({
+		    width : 100  
+	    });
+    });
+    </script>
+ 
+    <form name="form1" method="post" >
+ 
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+
+			<li><a href="admin.php?c=index&a=right">首页</a></li>
+            <li><a href="admin.php?c=dibao">低保特困管理</a></li>
+
+			<li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+            <span>信息登记</span></div>
+        <ul class="forminfo">
+        <table>
+                <tr>
+                    <td>
+                        <li>
+                            <label>
+                    姓名:</label><input value="<?php echo $info['name'];?>" name="name" type="text" id="name" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                    手机号:</label><input value="<?php echo $info['mobile'];?>" name="mobile" type="text" id="mobile" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                    地址:</label><input value="<?php echo $info['address'];?>" name="address" type="text" id="address" class="dfinput" /></li>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <li>
+                            <label>
+                    民族:</label><input value="<?php echo $info['nation'];?>" name="nation" type="text" id="nation" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                                出生年月:</label>
+						<input name="birthday" onClick="WdatePicker({ dateFmt: 'yyyy/MM', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['birthY']>0 ? ($info['birthY'] . '/' . $info['birthM']) : ''; ?>" id="birthday" class="dfinput" />
+						</li>
+                    </td>
+
+					<td>
+                        <li>
+                            <label>
+                    性别:</label>
+					<div class="vocation">
+                    <select name="select_sex" id="select_sex">
+                      <option value="">请选择</option>
+                      <option value="1" <?php if($info['select_sex'] == 1){echo 'selected';}?>>男</option>
+                      <option value="2" <?php if($info['select_sex'] == 2){echo 'selected';}?>>女</option>
+					</select>
+                  </div>
+				  </li>
+                    </td>
+                </tr>
+                 
+                 
+         </table>
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+          <span>低保特困信息登记</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>住房面积:</label>
+                  <input value="<?php echo $info['zhufang'];?>" name="zhufang" type="text"  class="dfinput"  /></li>
+              </td>
+              <td>
+                <li>
+                  <label>是否危房:</label>
+                  <div class="vocation">
+                    <select id="weifang" name="weifang">
+					  <option value="">请选择</option>
+                      <option value="yes"  <?php if($info['weifang'] == 'yes'){echo 'selected';}?>>是</option>
+                      <option value="no"  <?php if($info['weifang'] == 'no'){echo 'selected';}?>>不是</option></select>
+                  </div></li>
+              </td>
+              <td>
+               <li>
+                  <label>房屋结构:</label>
+                  <div class="vocation">
+                    <select id="jiegou" name="jiegou">
+					  <option value="">请选择</option>
+                      <option value="gangjin" <?php if($info['jiegou'] == 'gangjin'){echo 'selected';}?>>钢筋混泥土</option>
+                      <option value="zhuanhun" <?php if($info['jiegou'] == 'zhuanhun'){echo 'selected';}?>>砖混材料</option>
+                      <option value="zhuanwa" <?php if($info['jiegou'] == 'zhuanwa'){echo 'selected';}?>>砖瓦砖木</option>
+                      <option value="zhucao" <?php if($info['jiegou'] == 'zhucao'){echo 'selected';}?>>竹草土胚</option></select>
+                  </div></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>饮水情况:</label>
+                  <div class="vocation">
+                    <select id="yinshui" name="yinshui">
+					  <option value="">请选择</option>
+                      <option value="zilaishui" <?php if($info['yinshui'] == 'zilaishui'){echo 'selected';}?>>自来水</option>
+                      <option value="shenjinshui" <?php if($info['yinshui'] == 'shenjinshui'){echo 'selected';}?>>深井水</option>
+                      <option value="qianjinshui" <?php if($info['yinshui'] == 'qianjinshui'){echo 'selected';}?>>浅井水</option>
+                      <option value="haishui" <?php if($info['yinshui'] == 'haishui'){echo 'selected';}?>>江湖河海水</option>
+                      <option value="tangshui" <?php if($info['yinshui'] == 'tangshui'){echo 'selected';}?>>塘水</option>
+                      <option value="qita" <?php if($info['yinshui'] == 'qita'){echo 'selected';}?>>其他</option></select>
+                  </div></li>
+              </td>
+              <td>
+                <li>
+                  <label>饮水安全:</label>
+                  <div class="vocation">
+                    <select id="yinshuianquan" name="yinshuianquan">
+					  <option value="">请选择</option>
+                      <option value="yes"  <?php if($info['yinshuianquan'] == 'yes'){echo 'selected';}?>>是</option>
+                      <option value="no"  <?php if($info['yinshuianquan'] == 'no'){echo 'selected';}?>>不是</option></select>
+                  </div></li>
+              </td>
+              <td>
+               <li>
+                  <label>是否通电:</label>
+                  <div class="vocation">
+                    <select id="tongdian" name="tongdian">
+					  <option value="">请选择</option>
+                      <option value="yes"  <?php if($info['tongdian'] == 'yes'){echo 'selected';}?>>是</option>
+                      <option value="no"  <?php if($info['tongdian'] == 'no'){echo 'selected';}?>>不是</option></select>
+                  </div></li>
+              </td>
+            </tr> 
+          </table>
+          <table>
+            <tr>
+              <td style="line-height:34px;padding-left:5px;font-weight:bold;width:70%;">
+                  <label>主要致贫原因:</label>
+				  <?php 
+					$arr = explode(',',$info['zhipin']);
+				  ?>
+                  <label><input type="checkbox"  value="zai"  name="zhipin[]" <?php if(in_array('zai', $arr)){echo 'checked';}?>>因灾</label>
+                  <label><input type="checkbox" value="bing" name="zhipin[]" <?php if(in_array('bing', $arr)){echo 'checked';}?>>因病</label>
+                  <label><input type="checkbox" value="chan" name="zhipin[]" <?php if(in_array('chan', $arr)){echo 'checked';}?>>因残</label>
+                  <label><input type="checkbox" value="xue" name="zhipin[]" <?php if(in_array('xue', $arr)){echo 'checked';}?>>因学</label>
+                  <label><input type="checkbox" value="jishu" name="zhipin[]" <?php if(in_array('jishu', $arr)){echo 'checked';}?>>缺技术</label>
+                  <label><input type="checkbox" value="laodong" name="zhipin[]" <?php if(in_array('laodong', $arr)){echo 'checked';}?>>缺劳动</label>
+                  <label><input type="checkbox" value="zijin" name="zhipin[]" <?php if(in_array('zijin', $arr)){echo 'checked';}?>>缺发展资金</label>
+                  <label><input type="checkbox" value="tudi" name="zhipin[]" <?php if(in_array('tudi', $arr)){echo 'checked';}?>>缺土地</label>
+                  <label><input type="checkbox" value="shui" name="zhipin[]" <?php if(in_array('shui', $arr)){echo 'checked';}?>>缺水</label>
+                  <label><input type="checkbox" value="jiaotong" name="zhipin[]" <?php if(in_array('jiaotong', $arr)){echo 'checked';}?>>交通条件落后</label>
+                  <label><input type="checkbox" value="dongli" name="zhipin[]" <?php if(in_array('dongli', $arr)){echo 'checked';}?>>自身发展动力不足</label>
+                  <label><input type="checkbox" value="qita" name="zhipin[]" <?php if(in_array('qita', $arr)){echo 'checked';}?>>其他</label>
+              </td>
+            </tr>
+            <tr>
+              <td style="line-height:34px;padding-left:5px;font-weight:bold;width:70%;">
+                  <label>主要致困原因:</label>
+				  <?php 
+					$arr = explode(',',$info['zhikun']);
+				  ?>
+                  <label><input type="checkbox" value="laodong" name="zhikun[]" <?php if(in_array('laodong', $arr)){echo 'checked';}?>>家庭成员无劳动力能力</label>
+                  <label><input type="checkbox" value="jiuye" name="zhikun[]" <?php if(in_array('jiuye', $arr)){echo 'checked';}?>>有劳动能力而未就业</label>
+                  <label><input type="checkbox" value="xiagang" name="zhikun[]" <?php if(in_array('xiagang', $arr)){echo 'checked';}?>>下岗失业</label>
+                  <label><input type="checkbox" value="baoxian" name="zhikun[]" <?php if(in_array('baoxian', $arr)){echo 'checked';}?>>未参加社会保险</label>
+                  <label><input type="checkbox" value="luoshi" name="zhikun[]" <?php if(in_array('luoshi', $arr)){echo 'checked';}?>>社会保险待遇落实不到位</label>
+                  <label><input type="checkbox" value="jibing" name="zhikun[]" <?php if(in_array('jibing', $arr)){echo 'checked';}?>>家庭成员患重特大疾病</label>
+                  <label><input type="checkbox" value="zhaihai" name="zhikun[]" <?php if(in_array('zhaihai', $arr)){echo 'checked';}?>>遭受孜然灾害</label>
+                  <label><input type="checkbox" value="shigu" name="zhikun[]" <?php if(in_array('shigu', $arr)){echo 'checked';}?>>遭受意外事故</label>
+                  <label><input type="checkbox" value="shangxue" name="zhikun[]" <?php if(in_array('shangxue', $arr)){echo 'checked';}?>>子女上学</label>
+                  <label><input type="checkbox" value="qita" name="zhikun[]" <?php if(in_array('qita', $arr)){echo 'checked';}?>>其他</label>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+
+	  <div class="formbody">
+        <ul class="forminfo">
+          <table width="0" border="0" align="center">
+            <tr>
+              <td>
+                <li>
+                  <label>&nbsp;</label>
+                  <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+
+   <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	var zhipin = [];
+	var zhikun =[];
+	$.each(t, function() {
+		if(this.name=='zhipin[]'){
+			zhipin.push(this.value);
+		} else if(this.name=='zhikun[]'){
+			zhikun.push(this.value);
+		} else {
+			data[this.name] = this.value;
+		}
+	    
+	});
+	data['zhipin'] = zhipin.join(',');
+	data['zhikun'] = zhikun.join(',');
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写姓名!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=dibao&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=dibao&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

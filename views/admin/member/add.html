@@ -1,0 +1,416 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+    <script type="text/javascript">
+	$(document).ready(function(e) {
+        $("select").uedSelect({width: 230});
+      });
+	 </script>
+  
+      <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+          <li>
+            <a href="admin.php?c=index&a=right">首页</a></li>
+			<li><a href="admin.php?c=member">会员信息管理</a></li>
+          <li>
+            <a href="admin.php?c=member">会员信息添加</a></li>
+        </ul>
+      </div>
+	  <form >
+      <div class="formbody">
+        <div class="formtitle">
+          <span>个人信息</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>客户类型:</label>
+                  <div class="vocation">
+                    <select name="select_leixing" id="select_leixing">
+                      <option value="">请选择</option>
+                      <option value="1">后台增加</option>
+                      <option value="2">后台增加</option>
+                      <option value="3">后台增加</option>
+                      <option value="4">后台增加</option></select>
+                  </div>
+                </li>
+              </td>
+              <td>
+                <li>
+                  <label>会员编号:</label>
+                  <input name="member_no" onkeyup="this.value=this.value.toUpperCase()" type="text" id="member_no" class="dfinput" />
+				  <i><b>*</b></i>
+				 </li>
+              </td>
+              <td>
+                <li>
+                  <label>真实姓名:</label>
+                  <input name="name" type="text" id="name" class="dfinput" />
+				  <i><b>*</b></i>
+				</li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>性别:</label>
+                  <div class="vocation">
+                    <select name="select_sex" id="select_sex">
+                      <option selected="selected" value="">请选择</option>
+                      <option value="1">男</option>
+                      <option value="2">女</option></select>
+                  </div>
+                </li>
+              </td>
+              <td>
+                <li>
+                  <label>出生年月:</label>
+                  <input name="birthday" onClick="WdatePicker({ dateFmt: 'yyyy/MM', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" id="birthday" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>血型:</label>
+                  <div class="vocation">
+                    <select name="select_bloodType" id="select_bloodType">
+                      <option value="">请选择</option>
+                      <option value="A">A型</option>
+                      <option value="B">B型</option>
+                      <option value="O">O型</option>
+                      <option value="AB">AB型</option></select>
+                  </div>
+                </li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>籍贯:</label>
+                  <input name="birthplace" type="text" id="birthplace" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>学历:</label>
+                  <input name="educational" type="text" id="educational" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>身份证号:</label>
+                  <input name="idcard" type="text" onkeyup="this.value=this.value.toUpperCase()" id="idcard" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>岗位职称:</label>
+                  <input name="technicaltitle" type="text" id="technicaltitle" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>民族:</label>
+                  <input name="nation" type="text" id="nation" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>身高:</label>
+                  <input name="height" type="text" id="height" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>健康状况:</label>
+                  <input name="health" type="text" id="health" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>政治面貌:</label>
+                  <input name="political" type="text" id="political" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>所在行业:</label>
+                  <input name="industry" type="text" id="industry" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>介绍人:</label>
+                  <input name="introducer" type="text" id="introducer" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>婚姻:</label>
+                  <div class="vocation">
+                    <select name="select_marriage" id="select_marriage">
+					  <option value="">请选择</option>
+                      <option value="1">已婚</option>
+                      <option value="2">未婚</option></select>
+                  </div>
+                </li>
+              </td>
+              <td>
+                <li>
+                  <label>联系电话:</label>
+                  <input name="contactphone" type="text" id="contactphone" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>移动电话:</label>
+                  <input name="mobile" type="text" id="mobile" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>家庭地址:</label>
+                  <input name="address" type="text" id="address" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>工作地址:</label>
+                  <input name="workaddress" type="text" id="workaddress" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              
+              <td>
+                <li>
+                  <label>是否会员:</label>
+                  <div class="vocation">
+                    <select id="select_vip" name="select_vip" onchange="vipChange(this)">
+                      <option value="">请选择</option>
+                      <option value="1">是</option>
+                      <option value="2">否</option></select>
+                  </div>
+                </li>
+              </td>
+			  <td></td>
+              <td></td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+      <div class="formbody" id="vip_info" style="display:none;">
+        <div class="formtitle">
+          <span>会员信息</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>入会时间:</label>
+                  <input name="vip_time" onClick="WdatePicker({ dateFmt: 'yyyy-MM-dd', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" id="vip_time" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>会员到期时间:</label>
+                  <input name="vip_end" type="text" onClick="WdatePicker({ dateFmt: 'yyyy-MM-dd', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" id="vip_end" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>会员等级:</label>
+                  <div class="vocation">
+                    <select name="vip_level" id="vip_level">
+                      <option value="">请选择</option>
+                      <option value="1">一级</option>
+                      <option value="2">二级</option>
+                      <option value="3">三级</option>
+                      <option value="4">四级</option></select>
+                  </div>
+                </li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>会员金额:</label>
+                  <input name="vip_amount" type="text" id="vip_amount" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>状态:</label>
+                  <div class="vocation">
+                    <select name="vip_status" id="vip_status">
+                      <option value="">请选择</option>
+                      <option value="1">有效</option>
+                      <option value="2">无效</option></select>
+                  </div>
+                </li>
+              </td>
+              <td>
+                <li>
+                  <label>录入时间:</label>
+                  <input name="vip_addtime" type="text" onClick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:ii', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" id="vip_addtime" class="dfinput" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>家庭背景</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>家庭人数:</label>
+                  <input name="familynum" type="text" id="familynum" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>家庭称谓:</label>
+                  <input name="familyname" type="text" id="familyname" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>家庭面积:</label>
+                  <input name="familyarea" type="text" id="familyarea" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>公交路线:</label>
+                  <input name="busroad" type="text" id="busroad" class="dfinput" /></li>
+              </td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>其它联系人、监护人</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>姓名:</label>
+                  <input name="other_contact" type="text" id="other_contact" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  
+				  <label>性别:</label>
+                  <div class="vocation">
+                    <select name="other_contact_gender" id="other_contact_gender">
+                      <option selected="selected" value="">请选择</option>
+                      <option value="1">男</option>
+                      <option value="2">女</option></select>
+                  </div>
+				  </li>
+              </td>
+              <td>
+                <li>
+                  <label>家庭人数:</label>
+                  <input name="other_familynum" type="text" id="other_familynum" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>家庭称谓:</label>
+                  <input name="other_familyname" type="text" id="other_familyname" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>身份证号码:</label>
+                  <input name="other_idcard" onkeyup="this.value=this.value.toUpperCase()" type="text" id="other_idcard" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>所属部门:</label>
+                  <input name="other_department" type="text" id="other_department" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+               
+              <td>
+                <li>
+                  <label>固定电话:</label>
+                  <input name="other_phone" type="text" id="other_phone" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>移动电话:</label>
+                  <input name="other_mobile" type="text" id="other_mobile" class="dfinput" /></li>
+              </td>
+			  <td></td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>关系:</label>
+                  <input name="other_ship" type="text" id="other_ship" class="dfinput" /></li>
+              </td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+      <div class="formbody">
+        <ul class="forminfo">
+          <table width="0" border="0" align="center">
+            <tr>
+              <td>
+                <li>
+                  <label>&nbsp;</label>
+                  <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+	  </form>
+<script>
+function vipChange(obj){
+	var isvip = $(obj).val();
+	if(isvip == '1'){
+		$("#vip_info").show();
+	} else {
+		$("#vip_info").hide();
+	}
+}
+
+$("#submit_btn").click(function(){
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(!data['member_no'] || data['member_no'] == ''){
+		alert("请填写会员编号!");
+		return;
+	}
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写真实姓名!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=member&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					location.href = 'admin.php?c=member&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

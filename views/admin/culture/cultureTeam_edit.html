@@ -1,0 +1,100 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+
+<script type="text/javascript">
+    $(document).ready(function(e) {
+	    $("select").uedSelect({width: 232});
+    });
+    </script>
+ 
+    <form name="form1" method="post"  >
+ 
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="admin.php?c=index&a=right">首页</a></li>
+            <li><a href="#">文化娱乐</a></li>
+            <li><a href="admin.php?c=cultureTeam">演出队伍管理</a></li>
+
+			<li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+            <span>演出队伍管理</span></div>
+        <ul class="forminfo">
+            <li>
+                <label>
+                    队伍名称:</label><input value="<?php echo $info['name'];?>" name="name" type="text" id="name" class="dfinput"  /></li>
+            <li>
+                <label>
+                    参演项目:</label><input value="<?php echo $info['subject'];?>" name="subject" type="text" id="subject" class="dfinput" /></li>
+            <li>
+                <label>
+                    演出时间:</label><input value="<?php echo $info['showtime'];?>" name="showtime" type="text" id="showtime" class="dfinput" /></li>
+            <li>
+                <label>
+                    参演人数:</label><input value="<?php echo $info['show_num'];?>" name="show_num" type="text" id="show_num" class="dfinput" /></li>
+            <li>
+                <label>
+                    参演节目:</label><input value="<?php echo $info['item'];?>" name="item" type="text" id="item" class="dfinput" /></li>
+            <li>
+                <label>
+                    节目类型:</label><input value="<?php echo $info['item_type'];?>" name="item_type" type="text" id="item_type" class="dfinput" /></li>
+            <li>
+            <li>
+                <label>
+                    演出顺序:</label><input value="<?php echo $info['show_order'];?>" name="show_order" type="text" id="show_order" class="dfinput" /></li>
+            <li>
+                <label>
+                    说明:</label><input value="<?php echo $info['content'];?>" name="content" type="text" id="content" class="dfinput" /></li>
+            
+            <li>
+                <label>
+                    &nbsp;</label><input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+        </ul>
+    </div>
+    <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写演出队伍名称!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=cultureTeam&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=cultureTeam&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+</script>
+ <?php include(VIEWS.'/common/footer.html'); ?>

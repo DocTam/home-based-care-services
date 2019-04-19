@@ -1,0 +1,228 @@
+ <?php include(VIEWS.'/common/header.html'); ?>
+
+<script type="text/javascript">
+    $(document).ready(function(e) {
+	    $("select").uedSelect({
+		    width : 232  
+	    });
+		$("#service").uedSelect({
+		    width : 100  
+	    });
+    });
+    </script>
+ 
+    <form name="form1" method="post" >
+ 
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+
+			<li><a href="admin.php?c=index&a=right">首页</a></li>
+            <li><a href="admin.php?c=modelworker">劳动模范管理</a></li>
+
+			<li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+            <span>劳动模范登记</span></div>
+        <ul class="forminfo">
+        <table>
+                <tr>
+                    <td>
+                        <li>
+                            <label>
+                    姓名:</label><input value="<?php echo $info['name'];?>" name="name" type="text" id="name" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                    手机号:</label><input value="<?php echo $info['mobile'];?>" name="mobile" type="text" id="mobile" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                    地址:</label><input value="<?php echo $info['address'];?>" name="address" type="text" id="address" class="dfinput" /></li>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <li>
+                            <label>
+                    民族:</label><input value="<?php echo $info['nation'];?>" name="nation" type="text" id="nation" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                                出生年月:</label>
+						<input name="birthday" onClick="WdatePicker({ dateFmt: 'yyyy/MM', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['birthY']>0 ? ($info['birthY'] . '/' . $info['birthM']) : ''; ?>" id="birthday" class="dfinput" />
+						</li>
+                    </td>
+
+					<td>
+                        <li>
+                            <label>
+                    性别:</label>
+					<div class="vocation">
+                    <select name="select_sex" id="select_sex">
+                      <option value="">请选择</option>
+                      <option value="1" <?php if($info['select_sex'] == 1){echo 'selected';}?>>男</option>
+                      <option value="2" <?php if($info['select_sex'] == 2){echo 'selected';}?>>女</option>
+					</select>
+                  </div>
+				  </li>
+                    </td>
+                </tr>
+                 
+                 
+         </table>
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+          <span>荣誉称号及证件单位授予&nbsp;&nbsp;&nbsp;
+		  <a href="javascript: addother();;" id="" style="color:blue;">增加</a>
+		  </span>
+		</div>
+        <ul class="forminfo" id="other_forminfo">
+		<?php 
+
+			if(empty($info['otherdata'])){
+				$info['otherdata'] = array([ array('chenghao' => '')]);//至少有1个数据
+			}
+			$datalen = count($info['otherdata']);
+			foreach($info['otherdata'] as $key => $other ){
+		?>
+		<div id="other_tmpl" class="otherinfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>荣誉称号:</label>
+                  <input name="other_chenghao" value="<?php echo $other['other_chenghao'];?>" type="text"  class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>获奖年月:</label>
+                  <input name="other_year" value="<?php echo $other['other_year'];?>" type="text" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>颁奖单位:</label>
+                  <input name="other_danwei" value="<?php echo $other['other_danwei'];?>" type="text" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>证书编号:</label>
+                  <input name="other_zhengshu" value="<?php echo $other['other_zhengshu'];?>" type="text" class="dfinput" /></li>
+              </td>
+              <td>
+                <a href="javascript: ;" onclick="delother(this)" style="color:blue;">删除</a>
+              </td>
+              <td>
+             </tr>
+          </table>
+		  <?php 
+			if($datalen>1){
+		  ?>
+
+		  <div style="border-bottom: solid 1px #F0DCBE;margin: 15px 15px;" id="other1"></div>
+
+		  <?php }?>
+		  </div>
+		  <?php } ?>
+        </ul>
+      </div>
+
+	  <div class="formbody">
+        <ul class="forminfo">
+          <table width="0" border="0" align="center">
+            <tr>
+              <td>
+                <li>
+                  <label>&nbsp;</label>
+                  <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+
+   <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+
+
+var other_tmpl = '<table><tr><td><li><label>荣誉称号:</label><input name="other_chenghao" value="" type="text"  class="dfinput" /></li></td><td><li><label>获奖年月:</label><input name="other_year" value="" type="text"   class="dfinput" /></li></td><td><li><label>颁奖单位:</label><input name="other_danwei" value="" type="text"   class="dfinput" /></li></td></tr><tr><td><li><label>证书编号:</label><input name="other_zhengshu" value="" type="text"   class="dfinput" /></li></td><td><a href="javascript: ;" onclick="delother(this)" style="color:blue;">删除</a></td><td></tr></table>';
+var line = '<div style="border-bottom: solid 1px #F0DCBE;margin: 15px 15px;" id="other1"></div>';
+
+function addother(){
+	if($(".otherinfo").length && $(".otherinfo").length >= 1){
+		var html = '<div class="otherinfo">' + line + other_tmpl + '</div>';
+	} else {
+		var html = '<div class="otherinfo">' + other_tmpl + '</div>';
+	}	
+	$("#other_forminfo").append(html);
+	$("select").uedSelect({
+          width: 230
+    });
+}
+
+function delother(obj){
+		$(obj).parents(".otherinfo").remove();
+}
+
+var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	var other = {};
+	$.each(t, function() {
+		if( this.name.indexOf('other') > -1 ){
+			if("undefined" === typeof other[this.name] ){
+				other[this.name] = [];
+			}
+			other[this.name].push(this.value);			
+		} else {
+			data[this.name] = this.value;
+		}
+	});
+	data['otherdata'] = other;
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写姓名!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=modelworker&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=modelworker&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

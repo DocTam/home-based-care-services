@@ -1,0 +1,224 @@
+ <?php include(VIEWS.'/common/header.html'); ?>
+<script type="text/javascript">
+    $(document).ready(function(e) {
+	    $("select").uedSelect({
+		    width : 232  
+	    });
+    });
+    </script>
+ 
+    <form name="form1" method="post" >
+ 
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="admin.php?c=index&a=right">首页</a></li>
+            <li><a href="admin.php?c=disabled">残疾人管理</a></li>
+
+			<li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+            <span>残疾人登记</span></div>
+        <ul class="forminfo">
+        <table>
+                <tr>
+                    <td>
+                        <li>
+                            <label>
+                    姓名:</label><input value="<?php echo $info['name'];?>" name="name" type="text" id="name" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                    手机号:</label><input value="<?php echo $info['mobile'];?>" name="mobile" type="text" id="mobile" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                                民族:</label><input value="<?php echo $info['nation'];?>" name="nation" type="text" id="nation" class="dfinput" /></li>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <li>
+                            <label>
+                    户口性质:</label><input value="<?php echo $info['hukou'];?>" name="hukou" type="text" id="hukou" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                    婚姻:</label>
+					<div class="vocation">
+                    <select id="select_marriage" name="select_marriage">
+					  <option value="">请选择</option>
+                      <option value="1" <?php if($info['select_marriage'] == 1){echo 'selected';}?>>已婚</option>
+                      <option value="2" <?php if($info['select_marriage'] == 2){echo 'selected';}?>>未婚</option></select>
+                  </div>
+				  </li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>血型:</label>
+					<div class="vocation">
+                    <select id="select_bloodType" name="select_bloodType">
+                      <option value="">请选择</option>
+                      <option value="A" <?php if($info['select_bloodType'] == 'A'){echo 'selected';}?>>A型</option>
+                      <option value="B" <?php if($info['select_bloodType'] == 'B'){echo 'selected';}?>>B型</option>
+                      <option value="O" <?php if($info['select_bloodType'] == 'O'){echo 'selected';}?>>O型</option>
+                      <option value="AB" <?php if($info['select_bloodType'] == 'AB'){echo 'selected';}?>>AB型</option>
+					  <option value="其它" <?php if($info['select_bloodType'] == '其它'){echo 'selected';}?>>其它型</option>
+					  </select>
+                  </div>
+				  </li>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <li>
+                            <label>
+                    伤残级别:</label>
+					<input value="<?php echo $info['grade'];?>" name="grade" type="text" id="grade" class="dfinput"  />
+					</li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                                伤残事由:</label>
+						<input value="<?php echo $info['cause'];?>" name="cause" type="text" id="cause" class="dfinput" /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                    残疾人证件号:</label><input value="<?php echo $info['disabledno'];?>" name="disabledno" type="text" id="disabledno" class="dfinput"  /></li>
+                    </td>
+                </tr>
+				<tr>
+					<td>
+                        <li>
+                            <label>
+                    性别:</label>
+					<div class="vocation">
+                    <select name="select_sex" id="select_sex">
+                      <option value="">请选择</option>
+                      <option value="1" <?php if($info['select_sex'] == 1){echo 'selected';}?>>男</option>
+                      <option value="2" <?php if($info['select_sex'] == 2){echo 'selected';}?>>女</option>
+					</select>
+                  </div>
+				  </li>
+                    </td>
+
+					<td>
+                        <li>
+                            <label>
+                                出生年月:</label>
+						<input name="birthday" onClick="WdatePicker({ dateFmt: 'yyyy/MM', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['birthY']>0 ? ($info['birthY'] . '/' . $info['birthM']) : ''; ?>" id="birthday" class="dfinput" />
+						</li>
+                    </td>
+
+					</tr>
+         </table>
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+            <span>监护人信息</span></div>
+        <ul class="forminfo">
+        <table>
+                <tr>
+                    <td>
+                        <li>
+                            <label>
+                    姓名:</label><input value="<?php echo $info['other_name'];?>" name="other_name" type="text" id="other_name" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                    手机号:</label><input value="<?php echo $info['other_mobile'];?>" name="other_mobile" type="text" id="other_mobile" class="dfinput"  /></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                                地址:</label>
+						<input value="<?php echo $info['other_address'];?>" name="other_address" type="text" id="other_address" class="dfinput" /></li>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <li>
+                            <label>
+                    性别:</label>
+					<div class="vocation">
+                    <select name="other_sex" id="other_sex">
+                      <option value="">请选择</option>
+                      <option value="1" <?php if($info['other_sex'] == 1){echo 'selected';}?>>男</option>
+                      <option value="2" <?php if($info['other_sex'] == 2){echo 'selected';}?>>女</option>
+					</select>
+                  </div>
+				  </li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                    身份证号:</label><input value="<?php echo $info['other_idcard'];?>" name="other_idcard" type="text" id="other_idcard" class="dfinput"  /></li>
+                    </td>
+                     
+                </tr>
+
+				<tr>
+                    <td>
+                    <li><label>
+                    &nbsp;</label><input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+         </table>
+                
+        </ul>
+    </div>
+    <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写姓名!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=disabled&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=disabled&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

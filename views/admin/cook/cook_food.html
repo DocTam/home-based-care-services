@@ -1,0 +1,134 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+    <script type="text/javascript">
+	$(document).ready(function() {
+        $(".click").click(function() {
+          $(".tip").fadeIn(200);
+        });
+
+        $(".tiptop a").click(function() {
+          $(".tip").fadeOut(200);
+        });
+
+        $(".sure").click(function() {
+          $(".tip").fadeOut(100);
+        });
+
+        $(".cancel").click(function() {
+          $(".tip").fadeOut(100);
+        });
+        $("select").uedSelect({width: 100});
+      });
+      </script>
+ 
+    <div class="place">
+      <span>位置：</span>
+      <ul class="placeul">
+        <li><a href="admin.php?c=index&a=right">首页</a></li>
+          <li><a href="#">营养餐厅</a></li>
+		  <li><a href="admin.php?c=cookfood">今日菜谱管理</a></li>
+      </ul>
+    </div>
+    <div class="rightinfo">
+      <div class="tools">
+        <ul class="toolbar">
+          <li style="padding-right:10px;">
+            <a href="admin.php?c=cookfood&a=add">
+              <span>
+                <img src="<?php echo RES_PATH;?>/images/t01.png" /></span>添加</a>
+          </li>
+          <li>
+            <div class="vocation" style="height:35px;">
+              <select name="select_search" id="select_search">
+                <option value="">搜索条件</option>
+                
+                <option value="date" <?php if($SO['select'] =='date'){echo 'selected';}?>>日期</option></select>
+            </div>
+          </li>
+          <li>
+            <input type="text" id="word" onClick="WdatePicker({ dateFmt: 'yyyy-MM-dd', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" value="<?php echo $SO['word'];?>" style="width:200px; height:30px;" /></li>
+          <li>
+            <input type="submit" name="btn_search" value="搜索" id="btn_search" class="btn" /></li>
+        </ul>
+      </div>
+      <table class="tablelist">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>日期</th>
+            <th>就餐时段</th>
+
+			<th>菜单名称</th>
+			<th>价格</th>
+			<th>厨师</th>
+			<th>就餐人数</th>
+             
+            <th>操作</th></tr>
+        </thead>
+        <tbody id="td_showContent">
+		<?php 
+				foreach($items as $item){
+		?>
+          <tr>
+            <td><?php echo $item['food_id'];?></td>
+			<td><?php echo date('Y-m-d H:i:s',$item['dateline']);?></td>
+             <td><?php echo $dining_times[$item['dining_time']];?></td>
+			 <td><?php echo $menus[$item['menu_id']];?></td>
+             <td><?php echo round($item['price'],2);?></td>
+			 <td><?php echo $cooks[$item['worker_id']];?></td>
+			 <td><?php echo $item['people_num'];?></td>
+             
+            <td>
+            <a href="admin.php?c=cookfood&a=edit&id=<?php echo $item['food_id'];?>" class="tablelink">修改</a>
+			<a href="javascript:void(0);" class="tablelink" onclick="javascript: deleteOne(<?php echo $item['food_id'];?>);">删除</a>  
+			</td>
+          </tr>
+	<?php 
+		}
+	?>
+        </tbody>
+      </table>
+      <div class="pagin">
+         <?php include(VIEWS.'/common/page.html'); ?>
+      </div>
+     </div>
+    <script type="text/javascript">$('.tablelist tbody tr:odd').addClass('odd');</script>
+
+<script>
+//搜索
+var searching = false;
+$("#btn_search").click(function(){
+	var select = $("#select_search").val();
+	var word = $("#word").val();
+	var url = "admin.php?c=cookfood&a=index";
+	url += "&select=" + select + "&word=" + word;
+	location.href = url;
+
+});
+
+function deleteOne(id){
+	if(!confirm('确定要删除吗?')){
+		return false;
+	}
+	var url = location.href;
+	var formData = {};
+		formData["id"] = id;
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=cookfood&a=delone',
+			data: formData,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('删除成功!');
+					location.href = url;
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+}
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

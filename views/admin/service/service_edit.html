@@ -1,0 +1,201 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+    <script type="text/javascript">
+	$(document).ready(function(e) {
+        $("select").uedSelect({width: 230});
+      });</script>
+ 
+    <form name="form1" method="post" >
+      
+      <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+          <li>
+            <a href="admin.php?c=index&a=right">首页</a></li>
+			<li><a href="admin.php?c=service">服务商管理</a></li>
+			<li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+        </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>服务商信息</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>服务商编号:</label>
+				  <?php if($id>0){?>
+                  <input name="service_no" type="text" id="service_no" class="dfinput" disabled value="<?php echo $info['service_no'];?>"  />
+				  <?php }else{?>
+				  <input type="text" id="service_no" class="dfinput" disabled value="<?php echo $code;?>" />
+				  <?php }?>
+				</li>
+              </td>
+              <td>
+                <li>
+                  <label>服务商名称:</label>
+                  <input name="name" type="text" value="<?php echo $info['name'];?>" id="name" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>项目类别:</label>
+                  <div class="vocation">
+                    <select id="type_id" name="type_id">
+                      <option value="">请选择</option>
+					  <?php 
+						foreach($serviceType as $key=> $item){
+					  ?>
+                      <option <?php if($key == $info['type_id']){echo 'selected';}?>  value="<?php echo $key;?>"><?php echo $item;?></option>
+					  <?php 
+						}
+					  ?>
+					  </select>
+                  </div>
+                </li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>所属机构:</label>
+                  <input name="institution" type="text" value="<?php echo $info['institution'];?>" id="institution" class="dfinput" /></li>
+              </td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>信息资料</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>营业执照号码:</label>
+                  <input name="license" value="<?php echo $info['license'];?>" type="text" id="license" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>法人姓名:</label>
+                  <input name="legalperson" value="<?php echo $info['legalperson'];?>" type="text" id="legalperson" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>联系人:</label>
+                  <input name="contact" value="<?php echo $info['contact'];?>" type="text" id="contact" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>手机号码:</label>
+                  <input name="mobile" value="<?php echo $info['mobile'];?>" type="text" id="mobile" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>注册地址:</label>
+                  <input name="address" value="<?php echo $info['address'];?>" type="text" id="address" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>联系地址:</label>
+                  <input name="contactaddress" value="<?php echo $info['contactaddress'];?>" type="text" id="contactaddress" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>合同开始日:</label>
+                  <input name="agreement_begin" type="text" id="agreement_begin" onClick="WdatePicker({ dateFmt: 'yyyy-MM-dd', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['agreement_begin']>0? date('Y-m-d',$info['agreement_begin']) : '';?>" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>合同结束日:</label>
+                  <input name="agreement_end" type="text" id="agreement_end" onClick="WdatePicker({ dateFmt: 'yyyy-MM-dd', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['agreement_end']>0? date('Y-m-d',$info['agreement_end']) : '';?>" class="dfinput" /></li>
+              </td>
+              
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>状态:</label>
+                  <div class="vocation">
+                    <select id="status" name="status">
+                      <option value="">请选择</option>
+                      <option value="1" <?php if($info['status'] == 1){echo 'selected';}?> >有效</option>
+                      <option value="2" <?php if($info['status'] == 2){echo 'selected';}?> >无效</option>
+					</select>
+                  </div>
+                </li>
+              </td>
+              <td>
+                <li>
+                  <label>备注:</label>
+                  <input name="memo" type="text" value="<?php echo $info['memo'];?>" id="memo" class="dfinput" /></li>
+              </td>
+              <td></td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+      <div class="formbody">
+        <ul class="forminfo">
+          <table width="0" border="0" align="center">
+            <tr>
+              <td>
+                <li>
+                  <label>&nbsp;</label>
+                  <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+	  <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写服务商名称!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=service&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=service&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

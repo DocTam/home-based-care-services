@@ -1,0 +1,149 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+<style>
+	.forminfo li{width: 550px;}
+	</style>
+<script type="text/javascript">
+    $(document).ready(function(e) {
+	    $("select").uedSelect({width: 223});
+    });
+</script>
+
+
+<form name="form1" method="post">
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li>
+          <a href="admin.php?c=index&a=right">首页</a></li>
+		  <li>
+          <a href="javascript:;">老年大学</a></li>
+		  <li><a href="admin.php?c=student">学员管理</a></li>
+
+        <li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+            <span>学员信息</span></div>
+        <ul class="forminfo">
+            <li>
+                <label>
+                    学员姓名:</label><input value="<?php echo $info['name'];?>" name="name" type="text" id="name" class="dfinput"  />
+				<i><b>*</b></i>
+			</li>
+            <li>
+                <label>
+                    学员电话:</label><input value="<?php echo $info['mobile'];?>" name="mobile" type="text" id="mobile" class="dfinput" /></li>
+            <li>
+                <label>
+                    是否缴费:</label>
+                <div class="vocation">
+<select name="isjiaofei" id="isjiaofei">
+	<option value="">请选择</option>
+	<option value="1" <?php if($info['isjiaofei'] == 1){echo 'selected';}?>>是</option>
+	<option value="2" <?php if($info['isjiaofei'] == 2){echo 'selected';}?>>否</option>
+</select>
+                </div>
+            </li>
+            <li>
+                <label>
+                    参与课程:</label>
+                <div class="vocation">
+                    <select name="course_id" id="course_id" onchange="changecourse(this)">
+                      <option value="">请选择</option>
+					  <?php 
+						foreach($courses as $k => $item){
+					  ?>
+                      <option value="<?php echo $k;?>" <?php if($info['course_id'] == $k){echo 'selected';}?> data="<?php echo $item['teacher'];?>"><?php echo $item['course'];?></option>
+					  <?php 
+						}
+					  ?>
+                    </select>
+                 </div>
+			</li>
+            <li>
+                <label>
+                    任课老师:</label><input disabled value="<?php echo $courses[$info['course_id']]['teacher'];?>" type="text" id="teacher" class="dfinput" />
+					<i>
+					<b>不可修改</b>
+					</i>
+			</li>
+            <li>
+                <label>
+                    加入时间:</label>
+				<input name="addtime" type="text" id="addtime" onClick="WdatePicker({ dateFmt: 'yyyy-MM-dd', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['addtime']>0? date('Y-m-d',$info['addtime']) : '';?>" class="dfinput" />
+		    </li>
+			<?php if($id>0){?>
+            <li>
+                <label>
+                    是否有效:</label>
+                <div class="vocation">
+<select name="status" id="status">
+	<option value="">请选择</option>
+	<option value="1" <?php if($info['status'] == 1){echo 'selected';}?>>有效</option>
+	<option value="2" <?php if($info['status'] == 2){echo 'selected';}?>>无效</option>
+</select>
+                </div>
+            </li>
+			<?php }?>
+            
+            <li>
+                <label>
+                    &nbsp;</label><input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+        </ul>
+    </div>
+    <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+
+<script>
+
+function changecourse(obj){
+	var no = $(obj).find("option:selected").attr("data");
+	no = !no ? "" : no ;
+	$("#teacher").val(no);
+}
+var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写学员姓名!");
+		$("#name").focus();
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=student&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=student&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

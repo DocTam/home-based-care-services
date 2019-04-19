@@ -1,0 +1,191 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <link href="<?php echo RES_PATH;?>/css/style.css" rel="stylesheet" type="text/css" />
+    <script src="<?php echo RES_PATH;?>/js/jquery.js" type="text/javascript" ></script>
+
+    <style>
+        .topleft img
+        {
+            margin: 0 30px;
+        }
+        .nav
+        {
+            left: 190px;
+        }
+    </style>
+    <script type="text/javascript">
+$(function(){	
+	//顶部导航切换
+	$(".nav li a").click(function(){
+		$(".nav li a.selected").removeClass("selected")
+		$(this).addClass("selected");
+	})	
+})	
+    </script>
+
+</head>
+<body style="background: url(<?php echo RES_PATH;?>/images/topbg.gif) repeat-x;">
+    <div class="topleft">
+            <img src="<?php echo RES_PATH;?>/diy/images/logo/LOGO_人人敬老_128X128_F00.gif" />
+    </div>
+    <ul class="nav">
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                租赁商城</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('worker')" target="rightFrame">
+            <h2>
+                管理人员</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('sos')"  target="rightFrame">
+            <h2>
+                紧急求助</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('difficulty')" target="rightFrame">
+            <h2>
+                特困服务</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('psychology')" target="rightFrame">
+            <h2>
+                心理关爱</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('volunteer')"  target="rightFrame">
+            <h2>
+                志愿者</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                重点优抚</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                其他项目</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                合作企业</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                资产管理</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                天天记帐</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('cook')" target="rightFrame">
+            <h2>
+                营养餐厅</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('travelcorp')" target="rightFrame">
+            <h2>
+                旅游旅居</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('care')" target="rightFrame">
+            <h2>
+                日间照料</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('cleaner')" target="rightFrame">
+            <h2>
+                保洁卫生</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('lawyer')" target="rightFrame">
+            <h2>
+                法律援助</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('disabled')" target="rightFrame">
+            <h2>
+                残疾人</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('veteran')" target="rightFrame">
+            <h2>
+                退伍军人</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                劳动模范</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                突出贡献</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                人大代表</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                政协委员</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('member')" target="rightFrame">
+            <h2>
+                会员登记</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('culturetype')" target="rightFrame">
+            <h2>
+                文化娱乐</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('course')" target="rightFrame">
+            <h2>
+                老年大学</h2>
+        </a></li>
+        <li><a href="javascript:  ;" onClick="left_menu_click('medical')" target="rightFrame">
+            <h2>
+                医疗保健</h2>
+        </a></li>
+        <li><a href="javascript: ;" onClick="left_menu_click('house')" target="rightFrame">
+            <h2>
+                家政服务</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                敬老院</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                三无老人</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                空巢老人</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                高龄老人</h2>
+        </a></li>
+        <li><a href="admin.php?c=error" target="rightFrame">
+            <h2>
+                孤老孤疾</h2>
+        </a></li>
+        <li><a href="javascript:;" onClick=" left_menu_click('difficulty')" target="rightFrame">
+            <h2>
+                低保特困</h2>
+        </a></li>
+    </ul>
+    <div class="topright">
+        
+        <div class="user">
+            <span id="login_name"><a style="color:#FFF" href="admin.php?c=admin&a=edit" target="rightFrame"><?php echo $admin_name;?></a></span>
+        </div>
+
+		<div class="user" style="background:unset;">
+            <span id="login_name" style="background:unset;">
+				<a style="color:#FFD6AF" href="admin.php?c=index&a=logout" target="_parent">退出</a>
+			</span>
+        </div>
+
+		<!--<ul>
+            <li><a href="admin.php?c=index&a=logout" target="_parent">退出</a></li>
+        </ul>-->
+    </div>
+<script>
+function left_menu_click(label){
+ 
+	self.parent.leftFrame.leftmenu_click(label);
+}
+
+</script>
+</body>
+</html>

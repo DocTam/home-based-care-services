@@ -1,0 +1,104 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+
+<script type="text/javascript">
+    $(document).ready(function(e) {
+	    $("select").uedSelect({width: 232});
+    });
+    </script>
+ 
+    <form name="form1" method="post"  >
+ 
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="admin.php?c=index&a=right">首页</a></li>
+            <li><a href="#">日间照料</a></li>
+            <li><a href="admin.php?c=care">健康咨询管理</a></li>
+
+			<?php if($id>0){?>
+		  <li><a href="admin.php?c=care&a=edit&id=<?php echo $id;?>">护理师编辑</a></li>
+		  <?php }else{?>
+		  <li><a href="admin.php?c=care&a=add">护理师添加</a></li>
+		  <?php }?>
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+            <span>护理师管理</span></div>
+        <ul class="forminfo">
+            <li>
+                <label>
+                    护理师姓名:</label><input value="<?php echo $info['name'];?>" name="name" type="text" id="name" class="dfinput"  /></li>
+            <li>
+                <label> 性别:</label>
+				<div class="vocation">
+					<select name="select_sex" id="select_sex">
+                      <option value="">请选择</option>
+                      <option value="1" <?php if($info['select_sex'] == 1){echo 'selected';}?>>男</option>
+                      <option value="2" <?php if($info['select_sex'] == 2){echo 'selected';}?>>女</option>
+					</select>
+				</div>
+			</li>
+            <li>
+                <label>
+                    身份证:</label><input value="<?php echo $info['idcard'];?>" name="idcard" type="text" id="idcard" class="dfinput" /><i></i></li>
+            <li>
+                <label>
+                    出生年月:</label>
+					<input name="birthday" onClick="WdatePicker({ dateFmt: 'yyyy/MM', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['birthY']>0 ? ($info['birthY'] . '/' . $info['birthM']) : ''; ?>" id="birthday" class="dfinput" />
+			</li>
+            
+            <li>
+                <label>
+                    电话:</label><input value="<?php echo $info['mobile'];?>" name="mobile" type="text" id="mobile" class="dfinput" /></li>
+            <li>
+            <li>
+                <label>
+                    地址:</label><input value="<?php echo $info['address'];?>" name="address" type="text" id="address" class="dfinput" /></li>
+            <li>
+                <label>
+                    单位:</label><input value="<?php echo $info['company'];?>" name="company" type="text" id="company" class="dfinput" /></li>
+            
+            <li>
+                <label>
+                    &nbsp;</label><input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+        </ul>
+    </div>
+    <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写咨询师姓名!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=care&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					location.href = 'admin.php?c=care&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

@@ -1,0 +1,149 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+    <script type="text/javascript">
+	$(document).ready(function(e) {
+         
+		$("select").uedSelect({
+          width: 100
+        });
+
+		$("#select_vip").uedSelect({
+          width: 100
+        });
+
+		$("#select_sex").uedSelect({
+          width: 100
+        });
+
+		 
+      });</script>
+ 
+      <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+          <li>
+            <a href="admin.php?c=index&a=right">首页</a></li>
+			<li><a href="admin.php?c=memberDevice&member_id=<?php echo $member['member_id']; ?>">会员设备管理</a></li>
+			<li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+        </ul>
+      </div>
+	  <form >
+      <div class="formbody">
+        <div class="formtitle">
+          <span>设备信息</span></div>
+        <ul class="forminfo">
+          <table>
+			<tr>
+              <td>
+                <li>
+                  <label>会员姓名:</label>
+                  <input disabled type="text" value="<?php echo $member['name'];?>"   class="dfinput" />
+				   
+				</li>
+              </td>
+               
+            </tr>
+			<tr>
+              <td>
+                <li>
+                  <label>会员手机号:</label>
+                  <input disabled type="text" value="<?php echo $member['mobile'];?>"   class="dfinput" />
+				   
+				</li>
+              </td>
+               
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>设备名称:</label>
+                  <input name="name" type="text" value="<?php echo $info['name'];?>" id="name" class="dfinput" />
+				  <i><b>*</b></i>
+				</li>
+              </td>
+               
+            </tr>
+            <tr>
+               <td>
+                <li>
+                  <label>设备imei:</label>
+                  <input name="imei" type="text" value="<?php echo $info['imei'];?>" id="imei" class="dfinput" />
+				  <i><b>*</b></i>
+				</li>
+              </td>
+            </tr>
+             
+          </table>
+        </ul>
+      </div>
+     
+      <div class="formbody">
+        <ul class="forminfo">
+          <table width="0" border="0" align="center">
+            <tr>
+              <td>
+                <li>
+                  <label>&nbsp;</label>
+                  <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+	  <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+	  <input type="hidden" name="member_id" id="member_id" value="<?php echo $member['member_id']; ?>" /> 
+
+	  </form>
+<script> 
+var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+	var member_id = $("#member_id").val();
+	if(!member_id){
+		alert("数据错误,请刷新页面!");
+		return;
+	}
+
+	var t = $('form').serializeArray();
+	var data = {};
+	var other = {};
+	$.each(t, function() {
+		data[this.name] = this.value;
+	});
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写设备名称!");
+		return;
+	}
+
+	if(!data['imei'] || data['imei'] == ''){
+		alert("请填写设备imei!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=memberDevice&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=memberDevice&a=index&member_id='+member_id;
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

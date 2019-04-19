@@ -1,0 +1,460 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+    <script type="text/javascript">
+	var selectwidth = 230;
+	$(document).ready(function(e) {
+        $("select").uedSelect({width: selectwidth});
+     });
+	  </script>
+ 
+    <form name="form1">
+       
+      <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+          <li><a href="admin.php?c=index&a=right">首页</a></li>
+
+		  <?php 
+			if($from){ //从其它页面过来的
+
+				$title = $from['type'].'基本信息';
+		  ?>
+
+		  <li><a id="pagefrom" href="admin.php?c=<?php echo $from['from'];?>"><?php echo $from['module'];?>管理</a></li>
+		  <li><?php echo $from['type'];?>信息</li>
+
+		  <?php 
+			} else {//本来就是员工页面
+				$title = '员工基本信息';
+		  
+		  ?>
+			
+			<li><a href="admin.php?c=worker">员工信息管理</a></li>
+			<li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  
+
+		  <?php } ?>
+
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+            
+        </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span><?php echo $title; ?></span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>所属服务商:</label>
+                  <div class="vocation">
+                    <select name="service_id" id="service_id">
+                      <option value="">请选择</option>
+					  <?php 
+						foreach($services as $key => $item){
+					  ?>
+                      <option value="<?php echo $key;?>" <?php if($info['service_id'] == $key){echo 'selected';}?>><?php echo $item;?></option>
+					  <?php 
+						}
+					  ?>
+                    </select>
+                 </div>
+					 
+                </li>
+              </td>
+
+			  <td>
+                <li>
+                  <label>服务类型:</label>
+                  <div class="vocation">
+                    <select name="type_id" id="one_select" onclick="checktype(this);" data="<?php echo empty($oneAndTwo)?1:2; ?>" from="<?php echo !empty($from)? 1: 0 ; ?>">
+                      <option value="">请选择</option>
+					   
+                    </select>
+                 </div>
+				 <i><b>*</b></i>
+				 </li>
+              </td>
+
+              <td>
+                <li>
+                  <label>服务角色:</label>
+                  <div class="vocation">
+                    <select name="role_id" id="two_select" >
+                      <option value="">请选择</option>
+					  
+                    </select>
+                 </div>
+				 </li>
+              </td>
+              
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>姓名:</label>
+                  <input name="name" type="text" id="name" value="<?php echo $info['name'];?>" class="dfinput" />
+				  <i><b>*</b></i>
+				  </li>
+              </td>
+              <td>
+                <li>
+                  <label>出生年月:</label>
+                  <input name="birthday" onClick="WdatePicker({ dateFmt: 'yyyy/MM', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['birthY']>0 ? ($info['birthY'] . '/' . $info['birthM']) : ''; ?>" id="birthday" class="dfinput" />
+				  </li>
+              </td>
+              <td>
+                <li>
+                  <label>性别:</label>
+                  <div class="vocation">
+                    <select name="select_sex" id="select_sex">
+                      <option selected="selected" value="">请选择</option>
+                      <option value="1" <?php if($info['select_sex'] == 1){echo 'selected';}?>>男</option>
+                      <option value="2" <?php if($info['select_sex'] == 2){echo 'selected';}?>>女</option>
+					</select>
+                  </div>
+                </li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>民族:</label>
+                  <input name="nation" type="text" id="nation" value="<?php echo $info['nation'];?>" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>血型:</label>
+                  <div class="vocation">
+                    <select id="select_bloodType" name="select_bloodType">
+                      <option value="">请选择</option>
+                      <option value="A" <?php if($info['select_bloodType'] == 'A'){echo 'selected';}?>>A型</option>
+                      <option value="B" <?php if($info['select_bloodType'] == 'B'){echo 'selected';}?>>B型</option>
+                      <option value="O" <?php if($info['select_bloodType'] == 'O'){echo 'selected';}?>>O型</option>
+                      <option value="AB" <?php if($info['select_bloodType'] == 'AB'){echo 'selected';}?>>AB型</option>
+					  <option value="其它" <?php if($info['select_bloodType'] == '其它'){echo 'selected';}?>>其它型</option>
+					  </select>
+                  </div>
+                </li>
+              </td>
+              <td>
+                <li>
+                  <label>身份证号:</label>
+                  <input name="idcard" type="text" onkeyup="this.value=this.value.toUpperCase()" id="idcard" value="<?php echo $info['idcard'];?>" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>籍贯:</label>
+                  <input name="birthplace" type="text" id="birthplace" value="<?php echo $info['birthplace'];?>" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>婚姻:</label>
+                  <div class="vocation">
+                    <select id="select_marriage" name="select_marriage">
+                      <option value="1" <?php if($info['select_marriage'] == 1){echo 'selected';}?>>已婚</option>
+                      <option value="2" <?php if($info['select_marriage'] == 2){echo 'selected';}?>>未婚</option></select>
+                  </div>
+                </li>
+              </td>
+              <td>
+                <li>
+                  <label>现居住地址:</label>
+                  <input name="nowaddress" type="text" id="nowaddress" value="<?php echo $info['nowaddress'];?>" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>政治面貌:</label>
+                  <input name="political" type="text" id="political" value="<?php echo $info['political'];?>" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>学历:</label>
+                  <input name="educational" type="text" id="educational" value="<?php echo $info['educational'];?>" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>健康状况:</label>
+                  <input name="health" type="text" id="health" value="<?php echo $info['health'];?>" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>身高:</label>
+                  <input name="height" type="text" id="height" value="<?php echo $info['height'];?>" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>手机号:</label>
+                  <input name="mobile" type="text" id="mobile" value="<?php echo $info['mobile'];?>" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>座机电话:</label>
+                  <input name="contactphone" type="text" id="contactphone" value="<?php echo $info['contactphone'];?>" class="dfinput" /></li>
+              </td>
+            </tr>
+             
+          </table>
+        </ul>
+      </div>
+		
+		<div class="formbody">
+	  <div class="formtitle">
+          <span>其他信息</span></div>
+        <ul class="forminfo">
+          <table>
+             
+            <tr>
+              <td>
+                <li>
+                  <label>合同开始日:</label>
+                  <input name="agreement_begin" type="text" id="agreement_begin" onClick="WdatePicker({ dateFmt: 'yyyy-MM-dd', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['agreement_begin']>0? date('Y-m-d',$info['agreement_begin']) : '';?>" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>合同结束日:</label>
+                  <input name="agreement_end" type="text" id="agreement_end" onClick="WdatePicker({ dateFmt: 'yyyy-MM-dd', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['agreement_end']>0? date('Y-m-d',$info['agreement_end']) : '';?>" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>编号:</label>
+				  <?php if($id>0){?>
+                  <input name="worker_no" type="text" disabled value="<?php echo $info['worker_no'];?>" id="worker_no" class="dfinput" />
+				  <?php }else{ ?>
+				  <input   type="text" disabled value="<?php echo $code;?>" class="dfinput" />
+				  <?php }?>
+				</li>
+              </td>
+            </tr>
+
+			<tr>
+              <td>
+                <li>
+                  <label>资质证书:</label>
+                  <input value="<?php echo $info['certificate'];?>" name="certificate" type="text" id="certificate" class="dfinput" /></li>
+              </td>
+              <td>
+                 
+              </td>
+              <td>
+                 
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+	  </div>
+
+      <div class="formbody">
+        <div class="formtitle">
+          <span>工作情况</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>部门:</label>
+                  <input name="department" value="<?php echo $info['department'];?>" type="text" id="department" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>岗位:</label>
+                  <input name="technicaltitle" value="<?php echo $info['technicaltitle'];?>" type="text" id="technicaltitle" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>级别:</label>
+                  <div class="vocation">
+                    <select id="select_grade" name="select_grade">
+                      <option value="0">请选择</option>
+                      <option value="1" <?php if($info['select_grade'] == 1){echo 'selected';}?>>一级</option>
+                      <option value="2" <?php if($info['select_grade'] == 2){echo 'selected';}?>>二级</option>
+                      <option value="3" <?php if($info['select_grade'] == 3){echo 'selected';}?>>三级</option>
+                      <option value="4" <?php if($info['select_grade'] == 4){echo 'selected';}?>>四级</option>
+				   </select>
+                  </div>
+                </li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>工作状态:</label>
+                  <div class="vocation">
+                    <select id="work_status" name="work_status">
+                      <option value="">请选择</option>
+                      <option value="1" <?php if($info['work_status'] == 1){echo 'selected';}?> >有效</option>
+                      <option value="2" <?php if($info['work_status'] == 2){echo 'selected';}?> >无效</option>
+					</select>
+                  </div>
+                </li>
+              </td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>保险缴纳情况</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>保险类型:</label>
+                  <input name="secure_type" type="text" value="<?php echo $info['secure_type'];?>" id="secure_type" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>参保公司:</label>
+                  <input name="secure_company" value="<?php echo $info['secure_company'];?>" type="text" id="secure_company" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>保险日期:</label>
+                  <input name="secure_date" onClick="WdatePicker({ dateFmt: 'yyyy-MM-dd', onpicked: function() { $(this).trigger('change') }, oncleared: function() { $(this).trigger('change') } })" type="text" value="<?php echo $info['secure_date']>0? date('Y-m-d',$info['secure_date']) : '';?>" type="text" id="secure_date" class="dfinput" /></li>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <li>
+                  <label>状态:</label>
+                  <div class="vocation">
+                    <select id="status" name="status">
+                      <option value="0">请选择</option>
+                      <option value="1" <?php if($info['status'] == 1){echo 'selected';}?> >有效</option>
+                      <option value="2" <?php if($info['status'] == 2){echo 'selected';}?> >无效</option>
+					</select>
+                  </div>
+                </li>
+              </td>
+              <td>
+                <li>
+                  <label>评价:</label>
+                  <input name="comment" type="text" value="<?php echo $info['comment'];?>" id="comment" class="dfinput" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>备注:</label>
+                  <input name="memo" type="text" value="<?php echo $info['memo'];?>" id="memo" class="dfinput" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+      <div class="formbody">
+        <ul class="forminfo">
+          <table width="0" border="0" align="center">
+            <tr>
+              <td>
+                <li>
+                  <label>&nbsp;</label>
+                  <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+	  <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+function checktype(obj){
+	if($(obj).attr("data") == "1"){
+		alert("“服务类型”数据是空的, 请您在“服务人员” -> “员工服务类型”中先添加相应服务类型数据！");
+		return false;
+	}
+	//如果是来源其它页面,则不能修改类型
+	if($(obj).attr("from") == "1"){
+		//$(obj).val(now_one_id);
+		//alert("请不要修改服务类型!");
+		//return false;
+	}
+}
+var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写真实姓名!");
+		$("#name").focus();
+		return;
+	}
+
+	if(!data['type_id'] || data['type_id'] == ''){
+		alert("请选择服务类型,如果服务类型数据是空的,请您在“服务人员” -> “员工服务类型”中先添加相应服务类型数据！");
+		$("#role_id").focus();
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=worker&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					var href = $("#pagefrom").attr("href");
+					if(href){
+						location.href = href;
+					} else {
+						location.href = 'admin.php?c=worker&a=index';
+					}
+					
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+ 
+
+
+//服务类型与服务角色 二级联动
+var one_two_datas = <?php echo json_encode($oneAndTwo, JSON_UNESCAPED_UNICODE); ?>;
+
+var now_one_id = <?php echo intval($type_id);?>;
+var now_two_id = <?php echo intval($info['role_id']);?>;
+
+var oneobj = $("#one_select");
+var twoobj = $("#two_select");
+
+$(document).ready(function(e) {
+	
+	oneobj.on("change",function(){
+		
+		oneChange(oneobj, twoobj);
+		oneobj.uedSelect('setOption');
+		twoobj.uedSelect('setOption');
+		$("#service_no").val("");
+	});
+	setOne(oneobj, twoobj);
+	oneobj.uedSelect('setOption');
+	twoobj.uedSelect('setOption');
+});
+
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

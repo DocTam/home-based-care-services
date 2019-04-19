@@ -1,0 +1,193 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+    <script type="text/javascript">
+	$(document).ready(function(e) {
+        $("select").uedSelect({width: 230});
+        
+        
+        
+      });</script>
+ 
+    <form name="form1" method="post">
+      <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+          <li><a href="admin.php?c=index&a=right">首页</a></li>
+          <li><a href="#">旅游旅居</a></li>
+		  <li><a href="admin.php?c=travel">旅游管理</a></li>
+
+          <li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+		  </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>旅游管理</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>名称:</label>
+                  <input name="name" value="<?php echo $info['name'];?>" type="text" id="name" class="dfinput" /></li>
+              </td>
+			  </tr>
+
+			<tr>
+			  <td>
+                <li>
+                  <label>目的地:</label>
+                  <input name="destination" value="<?php echo $info['destination'];?>" type="text" id="destination" class="dfinput" /></li>
+              </td>
+            </tr>
+
+			<tr>
+			  <td>
+                <li>
+                  <label>费用说明:</label>
+                  <input name="pricememo" value="<?php echo $info['pricememo'];?>" type="text" id="pricememo" class="dfinput" /></li>
+              </td>
+            </tr>
+
+			<tr>
+			  <td>
+                <li>
+                  <label>交通工具:</label>
+                  <input name="traffic" value="<?php echo $info['traffic'];?>" type="text" id="traffic" class="dfinput" /></li>
+              </td>
+            </tr>
+
+			<tr>
+			  <td>
+                <li>
+                  <label>出行天数:</label>
+                  <input name="day" value="<?php echo $info['day'];?>" type="text" id="day" class="dfinput" /></li>
+              </td>
+            </tr>
+
+			<tr>
+			  <td>
+                <li>
+                  <label>出发时间:</label>
+                  <input name="outtime" value="<?php echo $info['outtime'];?>" type="text" id="outtime" class="dfinput" /></li>
+              </td>
+            </tr>
+
+			<tr>
+			  <td>
+                <li>
+                  <label>景点介绍:</label>
+                  <input name="introduce" value="<?php echo $info['introduce'];?>" type="text" id="introduce" class="dfinput" /></li>
+              </td>
+            </tr>
+
+			<tr>
+			  <td>
+                <li>
+                  <label>线路提供方:</label>
+                  <input name="line_provider" value="<?php echo $info['line_provider'];?>" type="text" id="line_provider" class="dfinput" /></li>
+              </td>
+            </tr>
+
+			<tr>
+			  <td>
+                <li>
+                  <label>线路实施方:</label>
+                  <input name="line_do" value="<?php echo $info['line_do'];?>" type="text" id="line_do" class="dfinput" /></li>
+              </td>
+            </tr>
+
+			<tr>
+			  <td>
+                <li>
+                  <label>发团次数:</label>
+                  <input name="go_time" value="<?php echo $info['go_time'];?>" type="text" id="go_time" class="dfinput" /></li>
+              </td>
+            </tr>
+
+			<tr>
+			  <td>
+                <li>
+                  <label>出行人数:</label>
+                  <input name="go_num" value="<?php echo $info['go_num'];?>" type="text" id="go_num" class="dfinput" /></li>
+              </td>
+            </tr>
+
+			<tr>
+			  <td>
+                <li>
+                  <label>
+                    是否有效:</label>
+                <div class="vocation">
+<select name="status" id="status">
+	<option value="">请选择</option>
+	<option value="1" <?php if($info['status'] == 1){echo 'selected';}?>>有效</option>
+	<option value="2" <?php if($info['status'] == 2){echo 'selected';}?>>无效</option>
+</select>
+                </div>
+				</li>
+              </td>
+            </tr>
+
+
+          </table>
+        </ul>
+      </div>
+      <div class="formbody">
+        <ul class="forminfo">
+          <table width="0" border="0" align="center">
+            <tr>
+              <td>
+                <li>
+                  <label>&nbsp;</label>
+                  <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+	  <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+
+ var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写名称!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=travel&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=travel&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+ 
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

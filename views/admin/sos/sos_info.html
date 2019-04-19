@@ -1,0 +1,204 @@
+<?php include(VIEWS. '/common/header.html'); ?>
+   
+  <form name="form1" method="post">
+    <div class="place">
+      <span>位置：</span>
+      <ul class="placeul">
+        <li>
+          <a href="admin.php?c=index&a=right">首页</a></li>
+        <li><a href="admin.php?c=sos">SOS报警管理</a></li>
+		<li><a href="<?php echo $frompage ? $frompage : 'admin.php?c=sos';?>">返回</a></li>
+
+      </ul>
+    </div>
+    <div class="formbody">
+      <div class="formtitle">
+        <span>个人信息</span></div>
+      <ul class="forminfo">
+        <table>
+          <tr>
+            <td>
+              <li>
+                <label>真实姓名:</label><?php echo $member['name'];?></li></td>
+            <td>
+              <li>
+                <label>会员编号:</label><?php echo $member['member_no'];?></li></td>
+            <td>
+              <li>
+                <label>是否会员:</label><?php echo $member['select_vip'] == 1?'是': '否';?></li></td>
+          </tr>
+          <tr>
+            <td>
+              <li>
+                <label>性别:</label>
+				<?php echo $member['select_sex'] == 1?'男': ($member['select_sex'] == 2?'女':'' );?></li>
+			</td>
+            <td>
+              <li>
+                <label>出生年月:</label><?php echo $member['birthY'] . '/' . $member['birthM']; ?></li></td>
+            <td>
+              <li>
+                <label>身份证号:</label>
+                <div class="vocation"><?php echo $member['idcard'];?></li></td>
+          </tr>
+          <tr>
+            <td>
+              <li>
+                <label>移动电话:</label><?php echo $member['mobile'];?></li></td>
+            <td>
+              <li>
+                <label>家庭地址:</label><?php echo $member['address'];?></li></td>
+            <td>
+				<?php if($member['member_id'] > 0){?>
+              <li>
+                <label>其他信息:</label><a href="admin.php?c=member&a=edit&id=<?php echo $member['member_id'];?>">更多</a></li>
+				<?php } ?>
+			</td>
+          </tr>
+        </table>
+      </ul>
+      </div>
+
+	  <div class="formbody">
+        <div class="formtitle">
+            <span>其它联系人、监护人</span></div>
+        <ul class="forminfo">  
+        <table>
+				<?php 
+					$otherdata = json_decode($member['otherdata'], true);
+					foreach($otherdata as $other){
+				?>
+                <tr>
+                    <td>
+                        <li>
+                            <label>
+                                姓名:</label><?php echo $other['other_contact'];?></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                                手机号:</label><?php echo $other['other_mobile'] , ' ', $other['other_phone'];?></li>
+                    </td>
+                    <td>
+                        <li>
+                            <label>
+                                关系:</label><?php echo $other['other_ship'];?></li>
+                    </td>
+                </tr>
+                <?php 
+					}
+				?>
+            </table>
+        </ul>
+    </div>   
+
+      <div class="formbody">
+        <div class="formtitle">
+          <span>报警信息</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>报警时间:</label><?php echo $info['time_begin'] ? $info['time_begin'] : date('Y-m-d H:i:s', $info['dateline']);?></li></td>
+              <td>
+                <li style="width:700px;text-align:left;">
+                  <label>报警位置:</label><?php echo $info['address'];?></li></td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>事项处理</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>接待人:</label>
+                  <input <?php if($info['status']==1){echo 'disabled';}?> name="receptionist" type="text" id="receptionist" class="dfinput" value="<?php echo $info['receptionist'];?>" /></li>
+              </td>
+              <td>
+                <li>
+                  <label>处理时间:</label>
+                  <input disabled value="<?php echo $info['updatetime']>0? date('Y-m-d H:i:s',$info['updatetime']) : date('Y-m-d H:i:s',__TIME);?>" type="text" class="dfinput" /></li>
+              </td>
+               
+            </tr>
+			<tr>
+              <td colspan="2">
+                <li style="width:800px;">
+                  <label>处理结果:</label>
+                  <input style="width:631px;" <?php if($info['status']==1){echo 'disabled';}?>  name="result" type="text" id="result" class="dfinput" value="<?php echo $info['result'];?>" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+	  <?php if($info['status']== 0){ ?>
+      <div class="formbody">
+        <ul class="forminfo">
+          <table width="0" border="0" align="center">
+            <tr>
+              <td>
+                <li>
+                  <label>&nbsp;</label>
+                  <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+	  <br><br>
+	  <?php  }?>
+
+	  <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+  </form>
+  <script>
+	var frompage = '<?php echo $frompage; ?>';
+	$("#submit_btn").click(function() {
+		if(!confirm("确定要保存数据吗?")){
+			return ;
+		}
+
+      
+      var data = {};
+      data['receptionist'] = $("#receptionist").val();
+	  data['result'] = $("#result").val();
+	  data['id'] = $("#id").val();
+
+      if (!data['receptionist'] || data['receptionist'] == '') {
+        alert("请填写接待人!");
+        return;
+      }
+	  if (!data['result'] || data['result'] == '') {
+        alert("请填写处理结果!");
+        return;
+      }
+
+      jQuery.ajax({
+        type: 'post',
+        url: 'admin.php?c=sos&a=savesos',
+        data: data,
+        dataType: 'json',
+        cache: false,
+        success: function(res) {
+
+          if (res.Success) {
+            alert('操作成功!');
+			if(frompage){
+				location.href = frompage ;
+			} else {
+				location.href = 'admin.php?c=sos&a=index';
+			}
+            
+          } else {
+            alert(res.Msg);
+          }
+        }
+
+      });
+    });
+</script>
+  <?php include(VIEWS. '/common/footer.html'); ?>

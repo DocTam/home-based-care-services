@@ -1,0 +1,107 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <link href="<?php echo RES_PATH;?>/css/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="<?php echo RES_PATH;?>/js/jquery-1.8.3.min.js"></script>
+
+    <style>
+        .topleft img
+        {
+            margin: 0 30px;
+        }
+        .nav
+        {
+            left: 190px;
+        }
+    </style>
+
+
+</head>
+<body style="background: url(<?php echo RES_PATH;?>/images/topbg.gif) repeat-x;">
+    <div class="topleft">
+            <a id="logo" href="?c=index&a=right" target="rightFrame">
+
+            </a>
+    </div>
+    <ul id="nav" class="nav">
+    </ul>
+    <div class="topright">
+        <div class="user">
+            <p><span id="Span1"><a style="color:#FFF" href="admin.php?c=admin&a=edit" target="rightFrame"><?php echo $admin_name;?></a></span></p>
+            <p><span><?php echo $admininfo[realname];?></span></p>
+            <p style=" text-align: right;padding: 12px;"><a style="color:#FFD6AF" href="admin.php?c=index&a=logout" target="_parent">退出</a></p>
+        </div>
+    </div>
+
+    <script language="javascript">
+        var brandTag = self.parent.window.location.search.substring(1).replace(/\s+/g, ""),
+            brandJsonUrl = '<?php echo RES_PATH;?>/json/brand.js',
+            brandObj = getBrandObj(brandJsonUrl);
+
+        window.onload = function() {
+            judgeBrand();
+            judgeMenu(brandObj[1]["topMenu"]);
+        };
+
+
+        function judgeBrand() {
+            if (brandTag.length != 0 && brandObj[0][brandTag]) {
+            } else {
+                brandTag = 'wlsd';
+            }
+
+            var title = brandObj[0][brandTag].name +
+                        brandObj[0][brandTag].type + " " +
+                        brandObj[0][brandTag].description,
+                group = brandObj[0][brandTag].name +
+                        brandObj[0][brandTag].type +
+                        brandObj[0][brandTag].group,
+                copyRight = brandObj[0][brandTag].copyRight + " " +
+                            brandObj[0][brandTag].name +
+                            brandObj[0][brandTag].type
+                logo = brandObj[0][brandTag].logo;
+            self.parent.document.title = "欢迎登录 " + title;
+            document.getElementById("logo").innerHTML = '<img src="' + logo + '" />';
+        }
+
+        function judgeMenu(obj) {
+            for (var i = 0, iLength = obj.length; i < iLength; i++) {
+                if (obj[i].show.length != 0) {
+                    addContent(i, "nav", obj);
+                }
+            }
+        }
+
+        function getBrandObj(url) {
+            return JSON.parse($.ajax({ url: url, async: false }).responseText);
+        }
+
+        function addContent(i, id, tmpArr) {
+            document.getElementById(id).insertAdjacentHTML(
+		        'beforeend',
+		        '<li>' + '\n' +
+			        '<a target="rightFrame" href="javascript:;" onclick="left_menu_click(' + "'" + tmpArr[i].href + "'" + ')">' + '\n' +
+				        '<h2>' + tmpArr[i].title + '</h2>' + '\n' +
+			        '</a>' + '\n' +
+		        '</li>' + '\n'
+	        );
+        }
+
+    </script>
+    <script type="text/javascript">
+        $(function() {
+            //顶部导航切换
+            $(".nav li a").click(function() {
+                $(".nav li a.selected").removeClass("selected")
+                $(this).addClass("selected");
+            })
+        });
+        function left_menu_click(label) {
+            self.parent.leftFrame.leftmenu_click(label);
+        }
+    </script>
+
+<?php //print_r($admininfo);?>
+</body>
+</html>

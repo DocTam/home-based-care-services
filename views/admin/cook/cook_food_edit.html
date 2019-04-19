@@ -1,0 +1,195 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+    <script type="text/javascript">
+	$(document).ready(function(e) {
+        $("select").uedSelect({width: 230});
+        
+        
+        
+      });</script>
+ 
+    <form name="form1" method="post">
+      <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+          <li><a href="admin.php?c=index&a=right">首页</a></li>
+          <li><a href="#">营养餐厅</a></li>
+		  <li><a href="admin.php?c=cookfood">今日菜谱管理</a></li>
+
+          <li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+		  
+		  </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>今日菜谱管理</span></div>
+        <ul class="forminfo">
+          <table>
+            <tr>
+              <td>
+                <li>
+                  <label>日期:</label>
+				  <?php $t = $info['dateline']>0?$info['dateline']:__TIME; ?>
+                  <input  disabled value="<?php echo  date('Y-m-d H:i:s',$t) ;?>" type="text"   class="dfinput" /></li>
+              </td>
+
+			  </tr>
+			  <tr>
+
+			  <td>
+                <li>
+                <label>
+                    就餐时段:</label>
+                <div class="vocation">
+<select name="dining_time" id="dining_time">
+	<option value="">请选择</option>
+	<?php 
+		foreach($dining_times as $key => $item){
+	?>
+	<option value="<?php echo $key; ?>" <?php if($info['dining_time'] == $key){echo 'selected';}?>><?php echo $item; ?></option>
+	<?php 
+		}
+	?>
+	 
+	
+</select>
+                </div>
+            </li>
+              </td>
+
+			  </tr>
+			  <tr>
+
+			  <td>
+                <li>
+                  <label>
+                    菜单名称:</label>
+                <div class="vocation">
+                    <select name="menu_id" id="menu_id">
+                      <option value="">请选择</option>
+					  <?php 
+						foreach($menus as $item){
+					  ?>
+                      <option value="<?php echo $item['menu_id'];?>" <?php if($info['menu_id'] == $item['menu_id']){echo 'selected';}?> data="<?php echo round($item['price'],2);?>"><?php echo $item['name'];?></option>
+					  <?php 
+						}
+					  ?>
+                    </select>
+                 </div>
+				 </li>
+              </td>
+
+			  </tr>
+			  <tr>
+
+			  <td>
+                <li>
+                  <label>价格:</label>
+                  <input name="price" value="<?php echo round($info['price'],2);?>" type="text" id="price" class="dfinput" /></li>
+              </td>
+
+			  </tr>
+			  <tr>
+
+			  <td>
+                <li>
+                  <label>
+                    厨师:</label>
+                <div class="vocation">
+                    <select name="worker_id" id="worker_id">
+                      <option value="">请选择</option>
+					  <?php 
+						foreach($cooks as $key => $item){
+					  ?>
+                      <option value="<?php echo $key;?>" <?php if($info['worker_id'] == $key){echo 'selected';}?>  ><?php echo $item;?></option>
+					  <?php 
+						}
+					  ?>
+                    </select>
+                 </div>
+				 </li>
+              </td>
+
+			  </tr>
+			  <tr>
+
+			  <td>
+                <li>
+                  <label>就餐人数:</label>
+                  <input name="people_num" value="<?php echo $info['people_num'];?>" type="text" id="people_num" class="dfinput" /></li>
+              </td>
+
+			  </tr>
+			  <tr>
+
+			  <td>
+                <li>
+                  <label>备注:</label>
+                  <input name="memo" value="<?php echo $info['memo'];?>" type="text" id="memo" class="dfinput" /></li>
+              </td>
+
+			  
+               
+            </tr>
+          </table>
+        </ul>
+      </div>
+      <div class="formbody">
+        <ul class="forminfo">
+          <table width="0" border="0" align="center">
+            <tr>
+              <td>
+                <li>
+                  <label>&nbsp;</label>
+                  <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+              </td>
+            </tr>
+          </table>
+        </ul>
+      </div>
+	  <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+
+ var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(!data['dining_time'] || data['dining_time'] == ''){
+		alert("请选择就餐时段!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=cookfood&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=cookfood&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+ 
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

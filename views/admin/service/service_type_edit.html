@@ -1,0 +1,86 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+    <script type="text/javascript">
+	$(document).ready(function(e) {
+         
+        $("select").uedSelect({width: 232});
+      });</script>
+ 
+    <form name="form1" method="post" onsubmit="return false;">
+       
+      <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+          <li>
+            <a href="admin.php?c=index&a=right">首页</a></li>
+			<li><a href="admin.php?c=serviceType">项目类别管理</a></li>
+			<li><?php if($id>0){echo '编辑';}else{echo '添加';}?></li>
+		  <?php if($frompage){?>
+		  <li><a href="<?php echo $frompage; ?>">返回</a></li>
+		  <?php }?>
+        </ul>
+      </div>
+      <div class="formbody">
+        <div class="formtitle">
+          <span>项目类别添加</span></div>
+        <ul class="forminfo">
+          <li>
+            <label>项目类别名称:</label>
+            <input name="name" type="text" value="<?php echo $info['name'];?>" id="name" class="dfinput" /></li>
+          <?php if($id>0){ ?>
+		  <li>
+            <label>是否有效:</label>
+            <div class="vocation">
+              <select id="status" name="status">
+                      <option value="0">请选择</option>
+                      <option value="1" <?php if($info['status'] == 1){echo 'selected';}?> >有效</option>
+                      <option value="2" <?php if($info['status'] == 2){echo 'selected';}?> >无效</option></select>
+            </div>
+          </li>
+		  <?php  } ?>
+          <li>
+            <label>&nbsp;</label>
+            <input name="" type="button" class="btn" value="确认保存" id="submit_btn" /></li>
+        </ul>
+      </div>
+	  <input type="hidden" name="id" id="id" value="<?php echo $id;?>" /> 
+    </form>
+
+<script>
+var frompage = '<?php echo $frompage;?>';
+$("#submit_btn").click(function(){
+
+	var t = $('form').serializeArray();
+	var data = {};
+	$.each(t, function() {
+	    data[this.name] = this.value;
+	});
+
+	if(!data['name'] || data['name'] == ''){
+		alert("请填写项目类别名称!");
+		return;
+	}
+
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=serviceType&a=save',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('操作成功!');
+					if(frompage && frompage.length>0){
+						location.href = frompage;
+						return;
+					}
+					location.href = 'admin.php?c=serviceType&a=index';
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+});
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>

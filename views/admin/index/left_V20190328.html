@@ -1,0 +1,430 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<link href="<?php echo RES_PATH;?>/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<?php echo RES_PATH;?>/js/jquery-1.8.3.min.js"></script>
+
+<script type="text/javascript">
+    //var CurrentUserName = self.parent.topFrame.document.getElementById('login_name').firstChild.innerHTML.replace(/^\s+|\s+$/g, "");
+    var CurrentUserName = "<?php echo $admininfo[admin_name]?>",
+        currentNodeName = "";
+    $(function() {
+        $("dl dd").first().css("color", "#f00");
+        $(".menuson .header").on("click", function() {
+            console.log("menuson click");
+            var $parent = $(this).parent();
+            $(".menuson>li.active").not($parent).removeClass("active open").find('.sub-menus').hide();
+
+            $parent.addClass("active");
+            if (!!$(this).next('.sub-menus').size()) {
+                if ($parent.hasClass("open")) {
+                    $parent.removeClass("open").find('.sub-menus').hide();
+                } else {
+                    $parent.addClass("open").find('.sub-menus').show();
+                }
+            }
+
+            var $pp = $($parent).parent();
+            var myhtml = $($parent).html();
+            console.log(myhtml);
+            $($parent).remove();
+            $pp.prepend('<dd>' + myhtml + '</dd>');
+
+        });
+
+        $('.leftmenu').on("click", ".sub-menus li", function(e) {
+            console.log("li click");
+
+            $(".sub-menus li.active").removeClass("active")
+            $(this).addClass("active");
+        });
+
+        $('.leftmenu').on("click", ".title", function() {
+
+            $('.menuson').slideUp().prev().css("color", "#000"); //所有都隐藏            
+
+            var $parent = $(this).parent();
+            var $pp = $($parent).parent();
+            var myhtml = $($parent).html();
+            $($parent).remove();
+            var dd = $("<dd>").html(myhtml);
+            dd.find('.menuson').hide();
+
+            $pp.prepend(dd);
+            currentNodeName = dd.children()[0].attributes[1].nodeValue;
+            if (CurrentUserName === "test888") {//使用体验账号时，限制只能操作会员管理。
+
+                if (currentNodeName === "member") {
+                    dd.find('.menuson').slideDown();
+                    self.parent.rightFrame.location = "admin.php?c=" + currentNodeName; //自动定位到对应左菜单下子菜单第一项并显示对应内容
+                } else {
+                    self.parent.rightFrame.location = "admin.php?c=index&a=right";
+                }
+                /*
+                if (dd.children('#member').size() > 0) {
+                //console.log(CurrentUserName);
+                dd.find('.menuson').slideDown();
+                } else {
+                //alert(CurrentUserName + "为体验用户^_^" + "\n" + "了解更多，请加盟我们^_^" + "\n" + "加盟热线：18138411366");
+                //alert(CurrentUserName + "为体验用户^_^" + "\n" + "了解更多，请加盟我们^_^");
+                self.parent.rightFrame.location = "admin.php?c=index&a=right";
+                }
+                */
+            } else {//使用非体验账号时，开放所有操作管理。
+                dd.find('.menuson').slideDown(); //展开
+                self.parent.rightFrame.location = "admin.php?c=" + currentNodeName;
+            }
+            //dd.find('.menuson').slideDown(); //展开
+
+            //scrollTo(0,0);//回到顶部
+            $(window).scrollTop(0);
+            dd.find('.menuson').prev().css("color", "#f00");
+
+        });
+
+
+
+
+    })	
+
+		function leftmenu_click(label){
+		    label = label == 'none' ? 'sos' : label;
+		    $("#" + label).click();
+		}
+
+		
+</script>
+
+</head>
+<body style="background: #fff3e1;">
+
+    <div class="lefttop">
+        <span></span>系统菜单</div>
+    <dl class="leftmenu">
+        <dd id="left_menu1">
+            <div class="title" id="member">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>会员管理
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=member&a=index" target="rightFrame">会员管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=member&a=add" target="rightFrame">会员添加</a><i></i></li>
+
+            </ul>
+        </dd>
+        <dd id="left_menu_worker">
+            <div class="title" id="worker">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico01.png" /></span>服务人员
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=worker&a=index" target="rightFrame">员工管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=worker&a=add" target="rightFrame">员工添加</a><i></i></li>
+
+				<li><cite></cite><a href="admin.php?c=workerType&a=index" target="rightFrame">员工服务类型</a><i></i></li>
+				<li><cite></cite><a href="admin.php?c=workerRole&a=index" target="rightFrame">员工服务角色</a><i></i></li>
+
+            </ul>
+        </dd>
+		<dd id="left_menu2">
+            <div class="title">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>会员健康
+            </div>
+            <ul class="menuson sub-menus">
+
+				<li><cite></cite><a href="admin.php?c=member&a=heartrate" target="rightFrame">会员心率记录</a><i></i></li>
+				<li><cite></cite><a href="admin.php?c=member&a=bp" target="rightFrame">会员血压记录</a><i></i></li>
+            </ul>
+        </dd>
+		<dd id="left_menu3">
+            <div class="title" id="sos">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>SOS报警管理
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=sos" target="rightFrame">SOS报警管理</a><i></i></li>
+				<li><cite></cite><a href="admin.php?c=sos&a=map" target="rightFrame">定位</a><i></i></li>
+            </ul>
+        </dd>
+		<dd id="left_menu3">
+            <div class="title" id="serviceType">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>服务商管理
+            </div>
+            <ul class="menuson sub-menus">
+				<li><cite></cite><a href="admin.php?c=serviceType" target="rightFrame">项目类别管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=serviceType&a=add" target="rightFrame">项目类别增加</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=service" target="rightFrame">服务商管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=service&a=add" target="rightFrame">服务商添加</a><i></i></li>
+            </ul>
+        </dd>
+
+        <dd id="left_menu3">
+            <div class="title" id="house">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>家政服务
+            </div>
+            <ul class="menuson sub-menus">
+				<li><cite></cite><a href="admin.php?c=house" target="rightFrame">家政服务员管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=serviceItem" target="rightFrame">服务内容管理</a><i></i></li>
+				<li><cite></cite><a href="admin.php?c=order" target="rightFrame">家政服务记录</a><i></i></li>
+            </ul>
+        </dd>
+        
+         
+		
+        <dd id="left_menu3">
+            <div class="title" id="admin">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>后台管理
+            </div>
+            <ul class="menuson sub-menus">
+				<?php if(ADMIN_ID == SUPER_ADMIN_ID){?>
+				<li><cite></cite><a href="admin.php?c=admin&a=index" target="rightFrame">管理员列表</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=admin&a=add" target="rightFrame">管理员添加</a><i></i></li>
+				<?php }?>
+                <li><cite></cite><a href="admin.php?c=admin&a=edit" target="rightFrame">管理员修改</a><i></i></li>
+				<?php if(ADMIN_ID == SUPER_ADMIN_ID){?>
+				<li><cite></cite><a href="admin.php?g=system&c=Config" target="rightFrame">系统设置</a><i></i></li>
+				<?php }?>
+            </ul>
+        </dd>
+
+		<dd id="left_menu3">
+            <div class="title" id="course">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>老年大学
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=course" target="rightFrame">课程管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=teacher" target="rightFrame">教师管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=student" target="rightFrame">学员管理</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="culturetype">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>文化娱乐
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=culturetype" target="rightFrame">类别管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=cultureart" target="rightFrame">艺术团管理</a><i></i></li>
+				<li><cite></cite><a href="admin.php?c=culturemember" target="rightFrame">团员管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=cultureteam" target="rightFrame">演出队伍管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=cultureshow" target="rightFrame">演出管理</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="lawyer">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>法律援助
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=lawyer" target="rightFrame">律师管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=lawAdvice" target="rightFrame">法律咨询记录</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="psychology">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>心理关爱
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=psychology" target="rightFrame">心理咨询师管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=psychologyAdvice" target="rightFrame">心理咨询记录</a><i></i></li>
+            </ul>
+        </dd>
+
+		<dd id="left_menu3">
+            <div class="title" id="health">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>健康咨询</div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=health" target="rightFrame">健康咨询师管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=healthAdvice" target="rightFrame">健康咨询记录</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="medical">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>医疗保健</div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=medical" target="rightFrame">医疗保健管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=medicalAdvice" target="rightFrame">医疗保健记录</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="care">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>日间照料</div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=care" target="rightFrame">护理师管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=careAdvice" target="rightFrame">日间照料记录</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="volunteer">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>志愿者</div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=volunteer" target="rightFrame">志愿者管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=volunteerAdvice" target="rightFrame">志愿服务记录</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="travelcorp">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>旅游旅居</div>
+            <ul class="menuson sub-menus">
+				<li><cite></cite><a href="admin.php?c=travel" target="rightFrame">旅游管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=travelcorp" target="rightFrame">旅游合作管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=travelline" target="rightFrame">旅游线路管理</a><i></i></li>
+                
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="cook">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>营养餐厅</div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=cook" target="rightFrame">厨师管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=cookmenu" target="rightFrame">菜单管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=cookfood" target="rightFrame">今日菜谱管理</a><i></i></li>
+                <!--<li><cite></cite><a href="javascript:;" target="rightFrame">营收记录</a><i></i></li>-->
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="cleaner">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>保洁卫生</div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=cleaner" target="rightFrame">保洁人员</a><i></i></li>
+				<li><cite></cite><a href="admin.php?c=cleanerAdvice" target="rightFrame">保洁记录</a><i></i></li>
+            </ul>
+        </dd>
+
+		<dd id="left_menu3">
+            <div class="title" id="veteran">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>退伍军人</div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=veteran" target="rightFrame">退伍军人管理</a><i></i></li>
+				<li><cite></cite><a href="admin.php?c=veteran&a=add" target="rightFrame">退伍军人登记</a><i></i></li>
+            </ul>
+        </dd>
+		<dd id="left_menu3">
+            <div class="title" id="disabled">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>残疾人</div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=disabled" target="rightFrame">残疾人管理</a><i></i></li>
+				<li><cite></cite><a href="admin.php?c=disabled&a=add" target="rightFrame">残疾人登记</a><i></i></li>
+            </ul>
+        </dd>
+		<dd id="left_menu3">
+            <div class="title" id="difficulty">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>特困服务</div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=difficulty" target="rightFrame">特困服务管理</a><i></i></li>
+				<li><cite></cite><a href="admin.php?c=difficulty&a=add" target="rightFrame">特困服务登记</a><i></i></li>
+            </ul>
+        </dd>
+
+		<dd id="left_menu3">
+            <div class="title" id="sanwu">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>三无老人
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=sanwu" target="rightFrame">三无人员管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=sanwu&a=add" target="rightFrame">三无人员登记</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="modelworker">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>退休劳动模范
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=modelworker" target="rightFrame">劳动模范管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=modelworker&a=add" target="rightFrame">劳动模范登记</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="kongchao">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>空巢老人
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=kongchao" target="rightFrame">空巢老人列表</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=kongchao&a=add" target="rightFrame">空巢老人登记</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="gongxian">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>突出贡献老年人
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=gongxian" target="rightFrame">人员管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=gongxian&a=add" target="rightFrame">人员登记</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="older">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>高龄老人
+            </div>
+            <ul class="menuson">
+                <li><cite></cite><a href="admin.php?c=older" target="rightFrame">老龄老人管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=older&a=add" target="rightFrame">高龄老人登记</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="daibiao">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>退休人大代表
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=daibiao" target="rightFrame">人大代表管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=daibiao&a=add" target="rightFrame">人大代表登记</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="gulao">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>孤老孤疾
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=gulao" target="rightFrame">人员管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=gulao&a=add" target="rightFrame">人员登记</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="zhengxie">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>退休政协委员
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=zhengxie" target="rightFrame">政协委员管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=zhengxie&a=add" target="rightFrame">政协委员登记</a><i></i></li>
+            </ul>
+        </dd>
+        <dd id="left_menu3">
+            <div class="title" id="dibao">
+                <span>
+                    <img src="<?php echo RES_PATH;?>/images/leftico02.png" /></span>低保特困
+            </div>
+            <ul class="menuson sub-menus">
+                <li><cite></cite><a href="admin.php?c=dibao" target="rightFrame">低保特困管理</a><i></i></li>
+                <li><cite></cite><a href="admin.php?c=dibao&a=add" target="rightFrame">低保特困登记</a><i></i></li>
+            </ul>
+        </dd>
+
+    </dl>
+</body>
+</html>

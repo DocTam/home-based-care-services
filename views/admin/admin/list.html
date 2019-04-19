@@ -1,0 +1,156 @@
+<?php include(VIEWS.'/common/header.html'); ?>
+ 
+    <script type="text/javascript">
+	$(document).ready(function() {
+        $(".click").click(function() {
+          $(".tip").fadeIn(200);
+        });
+
+        $(".tiptop a").click(function() {
+          $(".tip").fadeOut(200);
+        });
+
+        $(".sure").click(function() {
+          $(".tip").fadeOut(100);
+        });
+
+        $(".cancel").click(function() {
+          $(".tip").fadeOut(100);
+        });
+        $("select").uedSelect({width: 100});
+		
+      });
+      
+	 </script>
+      
+      <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+          <li>
+            <a href="admin.php?c=index&a=right">首页</a></li>
+          <li><a href="admin.php?c=admin&a=index">管理员管理</a></li>
+        </ul>
+      </div>
+      <div class="rightinfo">
+        <div class="tools">
+          <ul class="toolbar">
+            <li style="padding-right:10px;">
+              <a href="admin.php?c=admin&a=add">
+                <span>
+                  <img src="<?php echo RES_PATH;?>/images/t01.png" /></span>添加</a>
+            </li>
+            <li>
+              <div class="vocation" style="height:35px;">
+                <select name="select_search" id="select_search">
+                  <option value="">搜索条件</option>
+                  <option value="login_name" <?php if($SO['select'] =='login_name'){echo 'selected';}?> >登录账号</option>
+                  <option value="name" <?php if($SO['select'] =='name'){echo 'selected';}?>>姓名</option>
+                  <option value="mobi" <?php if($SO['select'] =='mobi'){echo 'selected';}?>>手机号</option>
+				  </select>
+              </div>
+            </li>
+            <li>
+              <input name="word" type="text" id="word" value="<?php echo $SO['word'];?>" style="width:200px; height:30px;" /></li>
+            <li>
+              <input type="button" name="btn_search" value="搜索" id="btn_search" class="btn" /></li>
+          </ul>
+        </div>
+        <table class="tablelist">
+          <thead>
+            <tr>
+              <th>登录账号</th>
+              <th>真实姓名</th>
+              <th>性别</th>
+              <th>手机号码</th>
+              <th>最后登录时间</th>
+              <th>是否有效</th>
+              <th>操作</th></tr>
+          </thead>
+          <tbody id="td_showContent">
+			<?php 
+				foreach($items as $item){
+			?>
+            <tr>
+              <td>
+                <a title="<?php echo $item['admin_name'];?>"><?php echo $item['admin_name']; if($item['admin_id'] == SUPER_ADMIN_ID){echo '(超级管理员)';}?></a></td>
+              <td><?php echo $item['realname'];?></td>
+              <td style=" color:<?php echo $item['gender'] == 1 ? 'Green': 'Red';?>;"><?php echo $item['gender'] == 1 ? '男': '女';?></td>
+              <td><?php echo $item['mobile'];?></td>
+              <td><?php echo $item['last_login']? date('Y-m-d H:i:s',$item['last_login']) : '';?></td>
+              <td style=" color:<?php echo $item['status'] == 1 ? 'Green' : 'Red';?>;"><?php echo $item['status'] == 1 ? '有效' : '无效';?></td>
+              <td>
+                <a href="admin.php?c=admin&a=edit&id=<?php echo $item['admin_id'];?>" class="tablelink">修改</a>
+				<?php if($item['admin_id'] != SUPER_ADMIN_ID){?>
+                <a href="javascript:;" class="tablelink" onclick="javascript: deleteOne(<?php echo $item['admin_id'];?>);">删除</a></td>
+				<?php }?>
+            </tr>
+            <?php 
+				}
+			?>
+          </tbody>
+        </table>
+
+<div class="pagin"><!--page-->
+<?php include(VIEWS.'/common/page.html'); ?>
+</div> <!--page-->
+
+        <div class="tip">
+          <div class="tiptop">
+            <span>提示信息</span>
+            <a>
+            </a>
+          </div>
+          <div class="tipinfo">
+            <span>
+              <img src="<?php echo RES_PATH;?>/images/ticon.png" /></span>
+            <div class="tipright">
+              <p>是否确认对信息的修改 ？</p>
+              <cite>如果是请点击确定按钮 ，否则请点取消。</cite></div>
+          </div>
+          <div class="tipbtn">
+            <input name="" type="button" class="sure" value="确定" />&nbsp;
+            <input name="" type="button" class="cancel" value="取消" /></div></div>
+      </div>
+      <script type="text/javascript">
+	  $('.tablelist tbody tr:odd').addClass('odd');
+	  </script>
+
+<script>
+//搜索
+var searching = false;
+$("#btn_search").click(function(){
+	var select = $("#select_search").val();
+	var word = $("#word").val();
+	var url = "admin.php?c=admin&a=index";
+	url += "&select=" + select + "&word=" + word;
+	location.href = url;
+
+});
+
+function deleteOne(id){
+	if(!confirm('确定要删除吗?')){
+		return false;
+	}
+	var url = location.href;
+	var formData = {};
+		formData["id"] = id;
+	jQuery.ajax({
+			type: 'post',
+			url: 'admin.php?c=admin&a=delone',
+			data: formData,
+			dataType: 'json',
+			cache: false,
+			success: function(res){
+				
+				if(res.Success){
+					alert('删除成功!');
+					location.href = url;
+				} else {
+					alert(res.Msg);
+				}
+			}
+
+		});
+}
+</script>
+<?php include(VIEWS.'/common/footer.html'); ?>
